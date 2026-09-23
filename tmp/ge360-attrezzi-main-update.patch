@@ -1,0 +1,2464 @@
+diff --git a/public/app.js b/public/app.js
+--- a/public/app.js
++++ b/public/app.js
+@@ -23,6 +23,8 @@
+     { id: 'cartongesso', name: 'Cartongesso', icon: '▤', kind: 'tool' },
+     { id: 'pulizia', name: 'Pulizia', icon: '🧹', kind: 'tool' },
+     { id: 'sicurezza', name: 'Sicurezza', icon: '🦺', kind: 'tool' },
++    { id: 'taglio-foratura', name: 'Taglio e foratura', icon: '🪚', kind: 'tool' },
++    { id: 'movimentazione', name: 'Movimentazione', icon: '🚚', kind: 'tool' },
+     { id: 'protezioni', name: 'Protezioni', icon: '🛡️', kind: 'material' },
+     { id: 'preparazione', name: 'Preparazione fondi', icon: '🧱', kind: 'material' },
+     { id: 'muratura', name: 'Malte e rasanti', icon: '🏗️', kind: 'material' },
+@@ -32,6 +34,7 @@
+     { id: 'sistemi-cartongesso', name: 'Sistemi cartongesso', icon: '▤', kind: 'material' },
+     { id: 'sistemi-pavimento', name: 'Pavimenti', icon: '▦', kind: 'material' },
+     { id: 'consumabili', name: 'Consumabili', icon: '📦', kind: 'material' },
++    { id: 'fissaggi', name: 'Fissaggi e sigillanti', icon: '🔩', kind: 'material' },
+     { id: 'altro-attrezzo', name: 'Altri attrezzi', icon: '＋', kind: 'tool' },
+     { id: 'altro-materiale', name: 'Altri materiali', icon: '＋', kind: 'material' }
+   ];
+@@ -101,6 +104,53 @@
+     { id: 'ginocchiere', name: 'Ginocchiere', category: 'sicurezza', kind: 'tool', icon: '🦿', note: 'Posa pavimenti', unit: 'paia' },
+     { id: 'scala', name: 'Scala', category: 'sicurezza', kind: 'tool', icon: '🪜', note: 'Altezza adatta', unit: 'pz' },
+     { id: 'trabattello', name: 'Trabattello', category: 'sicurezza', kind: 'tool', icon: '🏗️', note: 'Completo e verificato', unit: 'pz' },
++    { id: 'kit-primo-soccorso', name: 'Kit primo soccorso', category: 'sicurezza', kind: 'tool', icon: '🩹', note: 'Controllare dotazione e scadenze', unit: 'pz' },
++    { id: 'estintore', name: 'Estintore', category: 'sicurezza', kind: 'tool', icon: '🧯', note: 'Per lavorazioni a rischio scintille', unit: 'pz' },
++
++    { id: 'avvitatore-impulsi', name: 'Avvitatore a impulsi', category: 'elettroutensili', kind: 'tool', icon: '🔩', note: 'Batteria carica e inserti', unit: 'pz' },
++    { id: 'trapano-percussione', name: 'Trapano a percussione', category: 'elettroutensili', kind: 'tool', icon: '⚡', note: 'Mandrino e punte corrette', unit: 'pz' },
++    { id: 'scanalatrice', name: 'Scanalatrice', category: 'elettroutensili', kind: 'tool', icon: '🧱', note: 'Con aspirazione', unit: 'pz' },
++    { id: 'pistola-termica', name: 'Pistola termica', category: 'elettroutensili', kind: 'tool', icon: '♨️', note: 'Ugelli e prolunga', unit: 'pz' },
++    { id: 'compressore', name: 'Compressore', category: 'elettroutensili', kind: 'tool', icon: '💨', note: 'Tubo e raccordi', unit: 'pz' },
++    { id: 'chiodatrice', name: 'Chiodatrice / graffettatrice', category: 'elettroutensili', kind: 'tool', icon: '📌', note: 'Chiodi o graffe compatibili', unit: 'pz' },
++
++    { id: 'set-cacciaviti', name: 'Set cacciaviti', category: 'manuali', kind: 'tool', icon: '🪛', note: 'Taglio, PH, PZ e Torx', unit: 'set' },
++    { id: 'set-pinze', name: 'Set pinze', category: 'manuali', kind: 'tool', icon: '🗜️', note: 'Universale, becchi e tronchese', unit: 'set' },
++    { id: 'tenaglia', name: 'Tenaglia', category: 'manuali', kind: 'tool', icon: '🗜️', note: 'Filo e piccoli fissaggi', unit: 'pz' },
++    { id: 'chiavi-combinate', name: 'Set chiavi combinate', category: 'manuali', kind: 'tool', icon: '🔧', note: 'Misure metriche', unit: 'set' },
++    { id: 'chiave-regolabile', name: 'Chiave regolabile', category: 'manuali', kind: 'tool', icon: '🔧', note: 'Impianti e raccordi', unit: 'pz' },
++    { id: 'pinza-rivetti', name: 'Rivettatrice manuale', category: 'manuali', kind: 'tool', icon: '📌', note: 'Rivetti compatibili', unit: 'pz' },
++    { id: 'pistola-schiuma', name: 'Pistola per schiuma PU', category: 'manuali', kind: 'tool', icon: '☁️', note: 'Pulire dopo l’uso', unit: 'pz' },
++    { id: 'sega-manuale', name: 'Sega manuale', category: 'manuali', kind: 'tool', icon: '🪚', note: 'Legno e piccoli tagli', unit: 'pz' },
++    { id: 'seghetto-metallo', name: 'Seghetto per metallo', category: 'manuali', kind: 'tool', icon: '🪚', note: 'Lame di ricambio', unit: 'pz' },
++
++    { id: 'distanziometro-laser', name: 'Distanziometro laser', category: 'misura', kind: 'tool', icon: '📏', note: 'Misure rapide ambienti', unit: 'pz' },
++    { id: 'filo-piombo', name: 'Filo a piombo', category: 'misura', kind: 'tool', icon: '⬇️', note: 'Controllo verticalità', unit: 'pz' },
++    { id: 'filo-traccialinee', name: 'Filo traccialinee', category: 'misura', kind: 'tool', icon: '➖', note: 'Con polvere colorata', unit: 'pz' },
++    { id: 'misuratore-umidita', name: 'Misuratore di umidità', category: 'misura', kind: 'tool', icon: '💧', note: 'Controllo supporti e massetti', unit: 'pz' },
++    { id: 'spessimetro-fughe', name: 'Spessimetro / calibro', category: 'misura', kind: 'tool', icon: '📐', note: 'Controlli fini e spessori', unit: 'pz' },
++
++    { id: 'piccone', name: 'Piccone', category: 'demolizione', kind: 'tool', icon: '⛏️', note: 'Demolizioni e sottofondi', unit: 'pz' },
++    { id: 'leva-demolizione', name: 'Leva da demolizione', category: 'demolizione', kind: 'tool', icon: '🧰', note: 'Lunga e robusta', unit: 'pz' },
++    { id: 'martello-gomma', name: 'Martello in gomma', category: 'manuali', kind: 'tool', icon: '🔨', note: 'Posa e regolazioni', unit: 'pz' },
++
++    { id: 'rullo-angolare', name: 'Rullo angolare', category: 'pittura', kind: 'tool', icon: '🎨', note: 'Angoli e spigoli', unit: 'pz' },
++    { id: 'plafone', name: 'Plafone', category: 'pittura', kind: 'tool', icon: '🖌️', note: 'Fissativi e fondi', unit: 'pz' },
++    { id: 'frusta-pittura', name: 'Frusta miscelazione pittura', category: 'pittura', kind: 'tool', icon: '🌀', note: 'Per trapano o miscelatore', unit: 'pz' },
++
++    { id: 'battipiastrelle', name: 'Battipiastrelle in gomma', category: 'piastrelle', kind: 'tool', icon: '◫', note: 'Assestamento posa', unit: 'pz' },
++    { id: 'pinza-piastrelle', name: 'Pinza per piastrelle', category: 'piastrelle', kind: 'tool', icon: '✂️', note: 'Sagome e piccoli tagli', unit: 'pz' },
++    { id: 'raschietto-fughe', name: 'Raschietto per fughe', category: 'piastrelle', kind: 'tool', icon: '▰', note: 'Pulizia o rimozione fughe', unit: 'pz' },
++
++    { id: 'crimpatrice-profili', name: 'Crimpatrice per profili', category: 'cartongesso', kind: 'tool', icon: '🗜️', note: 'Unione montanti e guide', unit: 'pz' },
++    { id: 'punzonatrice-profili', name: 'Punzonatrice per profili', category: 'cartongesso', kind: 'tool', icon: '📌', note: 'Foratura lamiera sottile', unit: 'pz' },
++    { id: 'raspa-cartongesso', name: 'Raspa per cartongesso', category: 'cartongesso', kind: 'tool', icon: '▰', note: 'Rifinitura bordi', unit: 'pz' },
++
++    { id: 'carrello-pianale', name: 'Carrello a pianale', category: 'movimentazione', kind: 'tool', icon: '🛒', note: 'Trasporto materiali pesanti', unit: 'pz' },
++    { id: 'carrello-portasacchi', name: 'Carrello portasacchi', category: 'movimentazione', kind: 'tool', icon: '🚚', note: 'Sacchi e scatole', unit: 'pz' },
++    { id: 'cinghie-trasporto', name: 'Cinghie da trasporto', category: 'movimentazione', kind: 'tool', icon: '➿', note: 'Fissaggio e movimentazione', unit: 'set' },
++    { id: 'ventosa-doppia', name: 'Ventosa doppia', category: 'movimentazione', kind: 'tool', icon: '⏺️', note: 'Lastre e superfici lisce', unit: 'pz' },
++
+ 
+     // MATERIALI SFUSI E CONSUMABILI
+     { id: 'teli-nylon', name: 'Teli nylon di protezione', category: 'protezioni', kind: 'material', icon: '▧', note: 'Pavimenti, mobili e passaggi', unit: 'rotoli' },
+@@ -159,6 +209,61 @@
+     { id: 'lame-ricambio', name: 'Lame cutter e seghetti', category: 'consumabili', kind: 'material', icon: '✂️', note: 'Ricambi', unit: 'confezioni' },
+     { id: 'silicone-generico', name: 'Silicone / sigillante generico', category: 'consumabili', kind: 'material', icon: '💉', note: 'Colore e tipo corretti', unit: 'cartucce' },
+     { id: 'schiuma', name: 'Schiuma poliuretanica', category: 'consumabili', kind: 'material', icon: '☁️', note: 'Con o senza pistola', unit: 'bombole' },
++    { id: 'pellicola-protezione', name: 'Pellicola protettiva adesiva', category: 'protezioni', kind: 'material', icon: '▧', note: 'Pavimenti e serramenti', unit: 'rotoli' },
++    { id: 'telo-assorbente', name: 'Telo assorbente da cantiere', category: 'protezioni', kind: 'material', icon: '🧻', note: 'Protezione passaggi', unit: 'rotoli' },
++    { id: 'paraspigoli-protezione', name: 'Paraspigoli di protezione', category: 'protezioni', kind: 'material', icon: '📐', note: 'Protezione spigoli esistenti', unit: 'pz' },
++
++    { id: 'primer-universale', name: 'Primer universale', category: 'preparazione', kind: 'material', icon: '🧴', note: 'Per supporti assorbenti', unit: 'confezioni' },
++    { id: 'primer-epossidico', name: 'Primer epossidico', category: 'preparazione', kind: 'material', icon: '🧴', note: 'Supporti difficili secondo scheda tecnica', unit: 'confezioni' },
++    { id: 'massetto-premiscelato', name: 'Massetto premiscelato', category: 'muratura', kind: 'material', icon: '🧱', note: 'Riempimenti e quote', unit: 'sacchi' },
++    { id: 'massetto-rapido', name: 'Massetto rapido', category: 'muratura', kind: 'material', icon: '⏱️', note: 'Quando servono tempi ridotti', unit: 'sacchi' },
++    { id: 'malta-bastarda', name: 'Malta bastarda', category: 'muratura', kind: 'material', icon: '🧱', note: 'Murature e ripristini', unit: 'sacchi' },
++    { id: 'intonaco-premiscelato', name: 'Intonaco premiscelato', category: 'muratura', kind: 'material', icon: '⬜', note: 'Ripristino pareti', unit: 'sacchi' },
++    { id: 'gesso-rapido', name: 'Gesso rapido', category: 'muratura', kind: 'material', icon: '⬜', note: 'Fissaggi e piccole riprese', unit: 'sacchi' },
++    { id: 'rete-portaintonaco', name: 'Rete portaintonaco', category: 'muratura', kind: 'material', icon: '▦', note: 'Supporti critici e ripristini', unit: 'rotoli' },
++    { id: 'profili-intonaco', name: 'Guide / profili per intonaco', category: 'muratura', kind: 'material', icon: '┃', note: 'Regolarizzazione superfici', unit: 'pz' },
++
++    { id: 'guaina-liquida', name: 'Guaina liquida', category: 'impermeabilizzazione', kind: 'material', icon: '💧', note: 'Terrazze e punti critici', unit: 'confezioni' },
++    { id: 'rete-impermeabilizzazione', name: 'Rete per impermeabilizzazione', category: 'impermeabilizzazione', kind: 'material', icon: '▦', note: 'Da usare dove previsto dal sistema', unit: 'rotoli' },
++    { id: 'primer-impermeabilizzante', name: 'Primer per impermeabilizzazione', category: 'impermeabilizzazione', kind: 'material', icon: '🧴', note: 'Compatibile col sistema scelto', unit: 'confezioni' },
++
++    { id: 'collante-rapido', name: 'Collante rapido per piastrelle', category: 'posa-piastrelle', kind: 'material', icon: '🧱', note: 'Per interventi rapidi', unit: 'sacchi' },
++    { id: 'collante-s2', name: 'Collante deformabile S2', category: 'posa-piastrelle', kind: 'material', icon: '🧱', note: 'Supporti o formati che lo richiedono', unit: 'sacchi' },
++    { id: 'stucco-epossidico', name: 'Stucco epossidico per fughe', category: 'posa-piastrelle', kind: 'material', icon: '⬜', note: 'Colore e resa da verificare', unit: 'confezioni' },
++    { id: 'profili-piastrelle', name: 'Profili finitura piastrelle', category: 'posa-piastrelle', kind: 'material', icon: '📐', note: 'Alluminio / inox / PVC', unit: 'pz' },
++    { id: 'rete-disaccoppiante', name: 'Membrana disaccoppiante', category: 'posa-piastrelle', kind: 'material', icon: '▦', note: 'Se richiesta dal supporto', unit: 'm²' },
++
++    { id: 'smalto-acqua', name: 'Smalto all’acqua', category: 'finiture-pittura', kind: 'material', icon: '🎨', note: 'Legno, ferro o finiture specifiche', unit: 'latte' },
++    { id: 'antimuffa', name: 'Trattamento antimuffa', category: 'finiture-pittura', kind: 'material', icon: '🧴', note: 'Detergente o fondo specifico', unit: 'confezioni' },
++    { id: 'fondo-uniformante', name: 'Fondo uniformante', category: 'finiture-pittura', kind: 'material', icon: '🎨', note: 'Prima della finitura', unit: 'latte' },
++    { id: 'nastro-rete-crepe', name: 'Nastro rete per crepe', category: 'finiture-pittura', kind: 'material', icon: '〰️', note: 'Riparazioni localizzate', unit: 'rotoli' },
++
++    { id: 'profili-uw', name: 'Profili UW', category: 'sistemi-cartongesso', kind: 'material', icon: '━', note: 'Guide pareti', unit: 'pz' },
++    { id: 'profili-cw', name: 'Profili CW', category: 'sistemi-cartongesso', kind: 'material', icon: '┃', note: 'Montanti pareti', unit: 'pz' },
++    { id: 'profili-ud', name: 'Profili UD', category: 'sistemi-cartongesso', kind: 'material', icon: '━', note: 'Perimetrali controsoffitti', unit: 'pz' },
++    { id: 'profili-cd', name: 'Profili CD', category: 'sistemi-cartongesso', kind: 'material', icon: '┃', note: 'Orditura controsoffitti', unit: 'pz' },
++    { id: 'pendini-cartongesso', name: 'Pendini cartongesso', category: 'sistemi-cartongesso', kind: 'material', icon: '🔗', note: 'Tipo adatto al solaio', unit: 'pz' },
++    { id: 'ganci-ortogonali', name: 'Ganci ortogonali cartongesso', category: 'sistemi-cartongesso', kind: 'material', icon: '🔗', note: 'Incrocio profili CD', unit: 'pz' },
++    { id: 'giunti-profili', name: 'Giunti per profili cartongesso', category: 'sistemi-cartongesso', kind: 'material', icon: '🔗', note: 'Prolunghe e collegamenti', unit: 'pz' },
++    { id: 'nastro-acustico', name: 'Nastro acustico adesivo', category: 'sistemi-cartongesso', kind: 'material', icon: '〰️', note: 'Sotto guide perimetrali', unit: 'rotoli' },
++    { id: 'lastre-ignifughe', name: 'Lastre cartongesso ignifughe', category: 'sistemi-cartongesso', kind: 'material', icon: '🔥', note: 'Dove previsto dal progetto', unit: 'pz' },
++
++    { id: 'colla-spc', name: 'Colla per LVT / SPC', category: 'sistemi-pavimento', kind: 'material', icon: '🧴', note: 'Solo per sistemi incollati', unit: 'confezioni' },
++    { id: 'profilo-terminale', name: 'Profilo terminale pavimento', category: 'sistemi-pavimento', kind: 'material', icon: '━', note: 'Chiusure perimetrali', unit: 'pz' },
++    { id: 'silicone-parquet', name: 'Sigillante per pavimenti / battiscopa', category: 'sistemi-pavimento', kind: 'material', icon: '💉', note: 'Colore coordinato', unit: 'cartucce' },
++
++    { id: 'tasselli-universali', name: 'Tasselli universali', category: 'fissaggi', kind: 'material', icon: '📌', note: 'Varie misure', unit: 'confezioni' },
++    { id: 'tasselli-cartongesso', name: 'Tasselli per cartongesso', category: 'fissaggi', kind: 'material', icon: '📌', note: 'Tipo e portata adeguati', unit: 'confezioni' },
++    { id: 'tasselli-chimici', name: 'Ancorante chimico', category: 'fissaggi', kind: 'material', icon: '🧪', note: 'Con barre e bussola se necessarie', unit: 'cartucce' },
++    { id: 'viti-legno', name: 'Viti per legno', category: 'fissaggi', kind: 'material', icon: '🔩', note: 'Varie lunghezze', unit: 'confezioni' },
++    { id: 'viti-metallo', name: 'Viti per metallo', category: 'fissaggi', kind: 'material', icon: '🔩', note: 'Autofilettanti / autoforanti', unit: 'confezioni' },
++    { id: 'rondelle-dadi', name: 'Dadi e rondelle', category: 'fissaggi', kind: 'material', icon: '⚙️', note: 'Misure necessarie', unit: 'confezioni' },
++    { id: 'rivetti', name: 'Rivetti', category: 'fissaggi', kind: 'material', icon: '📌', note: 'Diametro e lunghezza corretti', unit: 'confezioni' },
++    { id: 'colla-montaggio', name: 'Colla di montaggio', category: 'fissaggi', kind: 'material', icon: '💉', note: 'Compatibile col supporto', unit: 'cartucce' },
++    { id: 'ms-polimero', name: 'Sigillante MS polimero', category: 'fissaggi', kind: 'material', icon: '💉', note: 'Sigillatura e incollaggio', unit: 'cartucce' },
++
++
++
+     { id: 'batterie', name: 'Batterie utensili cariche', category: 'elettroutensili', kind: 'tool', icon: '🔋', note: 'Compatibili', unit: 'pz' },
+     { id: 'caricabatterie', name: 'Caricabatterie utensili', category: 'elettroutensili', kind: 'tool', icon: '🔌', note: 'Compatibile', unit: 'pz' },
+     { id: 'acqua', name: 'Tanica acqua', category: 'consumabili', kind: 'material', icon: '💧', note: 'Se manca acqua in cantiere', unit: 'pz' }
+@@ -318,7 +423,7 @@
+ 
+   function defaultState() {
+     return {
+-      jobName:'', jobDate:localISODate(), workerName:appSettings.defaultWorkerName || 'Milan', workDescription:'', jobNotes:'', teamInstructions:'', activeView:'today', currentListId:null, agendaDate:localISODate(), agendaTab:'jobs', warehouseDate:localISODate(), warehouseMode:'tools', returnView:'today', jobTab:'summary', lastUsageDate:localISODate(),
++      jobName:'', jobDate:localISODate(), workerName:appSettings.defaultWorkerName || 'Milan', workDescription:'', jobNotes:'', teamInstructions:'', activeView:'today', currentListId:null, agendaDate:localISODate(), agendaTab:'jobs', warehouseDate:localISODate(), warehouseMode:'all', warehouseSearch:'', returnView:'today', jobTab:'summary', lastUsageDate:localISODate(),
+       selectedWorks:[], extraKits:[], excludedKits:[], manualItems:{}, excludedItems:[], qtyOverrides:{},
+       available:{}, purchased:{}, loaded:{}, customItems:[], reminders:[],
+       analysis:{matchedWorks:[],matchedItems:[],analyzedAt:null,message:''},
+@@ -335,11 +440,11 @@
+   function cacheEls() {
+     [
+       'installBtn','summaryBtn','savedBtn','saveStatus',
+-      'todayTitle','todayDateLabel','todayStatusCard','todayStatusIcon','todayStatusTitle','todayStatusText','todayLoadProgress','todayWarehouseBtn','todayMaterialsBtn','todayNewJobBtn','todayToolCount','todayBuyCount','todayJobCount','todayJobs','todayEmpty','todayOpenAgendaBtn','todayChecklistCard','todayChecklistCount','todayChecklistList',
++      'todayTitle','todayDateLabel','todayStatusCard','todayStatusIcon','todayStatusTitle','todayStatusText','todayLoadProgress','todayWarehouseBtn','todayMaterialsBtn','todayNewJobBtn','todayToolCount','todayBuyCount','todayJobCount','todayJobs','todayEmpty','todayOpenAgendaBtn','todayChecklistCard','todayChecklistCount','todayChecklistList','todayOpenPickupBtn','todayNotesCard','todayNotesCount','todayNotesList',
+       'homeCalendarTitle','homeCalendarGrid','homeCalendarPrevBtn','homeCalendarNextBtn','homeCalendarTodayBtn','todayNextJobs','todayNextEmpty','todayBackupStatus','todayBackupBtn','quickJobDialog','quickJobForm','quickJobName','quickJobDate','closeQuickJobBtn','cancelQuickJobBtn','jobCompleteBtn',
+       'jobQuickAddDialog','jobQuickAddForm','quickAddJobLabel','quickAddTypeRow','quickAddText','quickAddTextLabel','closeJobQuickAddBtn','cancelJobQuickAddBtn',
+       'moveJobDialog','moveJobTargetLabel','moveJobList','moveJobEmpty','closeMoveJobBtn','moveJobHereBtn','moveJobHereEmptyBtn',
+-      'warehouseTitle','warehouseFocusProgress','warehouseDate','warehouseDateRelation','warehousePrevBtn','warehouseNextBtn','warehouseTodayBtn','warehouseDaySummary','warehouseToolsBtn','warehouseMaterialsBtn','warehouseToolsPane','warehouseMaterialsPane','warehouseToolList','warehouseToolEmpty','warehouseMaterialList','warehouseMaterialEmpty','warehouseMarkToolsBtn','warehouseShareBtn',
++      'warehouseTitle','warehouseFocusProgress','warehouseDate','warehouseDateRelation','warehousePrevBtn','warehouseNextBtn','warehouseTodayBtn','warehouseDaySummary','warehouseAllBtn','warehouseToolsBtn','warehouseMaterialsBtn','warehouseSearch','clearWarehouseSearch','warehouseToolsPane','warehouseMaterialsPane','warehouseToolList','warehouseToolEmpty','warehouseMaterialList','warehouseMaterialEmpty','warehouseMarkToolsBtn','warehouseShareBtn',
+       'moreCurrentJob','moreCurrentJobMeta','moreOpenCurrentBtn','moreArchiveBtn','moreBackupBtn','moreRestoreBtn','moreSummaryBtn','moreBackupStatus','appMenuBtn','appMenuDialog','closeAppMenuBtn','menuTeamBtn','menuArchiveBtn','menuSummaryBtn','menuBackupBtn','menuSettingsBtn','syncStatusCompact',
+       'settingsDialog','closeSettingsBtn','settingsDefaultWorker','settingsSaveGeneralBtn','settingsCloudBaseUrl','settingsTestCloudUrlBtn','settingsSaveCloudUrlBtn','settingsCloudUrlStatus','settingsCatalogSearch','settingsCatalogKind','settingsCatalogList','settingsCatalogCount','settingsHiddenCount','settingsAddItemBtn','settingsAddCategoryBtn','settingsCategoryList','settingsResetCatalogBtn','settingsItemDialog','closeSettingsItemBtn','settingsItemForm','settingsItemId','settingsItemSource','settingsItemName','settingsItemIcon','settingsItemKind','settingsItemCategory','settingsItemUnit','settingsItemNote','settingsCategoryDialog','closeSettingsCategoryBtn','settingsCategoryForm','settingsCategoryId','settingsCategorySource','settingsCategoryName','settingsCategoryIcon','settingsCategoryKind','settingsAiEndpoint','settingsAiApiKey','settingsAiModel','settingsAiAccessKey','settingsAiPublicEndpoint','settingsAiStatus','settingsSaveAiBtn','settingsTestAiBtn','settingsSendAiBtn','settingsTestReadApiBtn',
+       'jobName','jobDate','workerName','jobNotes','teamInstructions','jobSummary','quickAddMaterialBtn','quickAddToolBtn','quickAddNoteBtn','jobToolsPreviewCount','jobToolsPreview','jobMaterialsPreviewCount','jobMaterialsPreview','jobNotesPreviewCount','jobNotesPreview','jobOpenToolsBtn','jobOpenMaterialsBtn','jobOpenNotesBtn','scheduleJobBtn','scheduleHint','newJobBtn','backAgendaBtn','jobDetailTitle','jobDetailDate','jobDetailStatus','jobToolMetric','jobBuyMetric','jobLoadMetric','jobAutosaveText','jobReadinessCard','jobReadinessIcon','jobReadinessTitle','jobReadinessText','jobMissingList','jobLoadCta','dateQuickButtons','upcomingJobs','upcomingEmpty','agendaDate','agendaDateRelation','agendaPrevBtn','agendaNextBtn','agendaTodayBtn','dailyTabs','dailyJobsPane','dailyWarehousePane','dailyMaterialsPane','dayJobCount','dayToolCount','dayMaterialCount','dailyWarehouseProgress','dailyWarehouseList','dailyWarehouseEmpty','dailyMaterialsProgress','dailyMaterialsList','dailyMaterialsEmpty',
+@@ -398,7 +503,8 @@
+     if (state.activeView === 'more') state.activeView = 'today';
+     state.agendaDate = /^\d{4}-\d{2}-\d{2}$/.test(String(state.agendaDate || '')) ? String(state.agendaDate) : localISODate();
+     state.warehouseDate = /^\d{4}-\d{2}-\d{2}$/.test(String(state.warehouseDate || '')) ? String(state.warehouseDate) : localISODate();
+-    if (!['tools','materials'].includes(state.warehouseMode)) state.warehouseMode = 'tools';
++    if (!['all','tools','materials'].includes(state.warehouseMode)) state.warehouseMode = 'all';
++    state.warehouseSearch = String(state.warehouseSearch || '').slice(0,120);
+     if (!['today','jobs','warehouse'].includes(state.returnView)) state.returnView = 'today';
+     if (!['summary','notes'].includes(state.jobTab)) state.jobTab = 'summary';
+     if (state.lastUsageDate && state.lastUsageDate !== localISODate()) { state.activeView='today'; state.agendaDate=localISODate(); state.warehouseDate=localISODate(); }
+@@ -563,7 +669,7 @@
+         materials.set(id,entry);
+       });
+     });
+-    const toolRows=[...tools.values()].map(entry => ({...entry,jobs:[...new Set(entry.jobs)],loaded:entry.refs.length>0 && entry.refs.every(ref => ref.loaded)})).sort((a,b) => getCategory(a.item.category).name.localeCompare(getCategory(b.item.category).name) || a.item.name.localeCompare(b.item.name));
++    const toolRows=[...tools.values()].map(entry => ({...entry,jobs:[...new Set(entry.jobs)],loaded:entry.refs.length>0 && entry.refs.every(ref => ref.loaded)})).sort((a,b) => Number(a.loaded)-Number(b.loaded) || getCategory(a.item.category).name.localeCompare(getCategory(b.item.category).name) || a.item.name.localeCompare(b.item.name));
+     const materialRows=[...materials.values()].map(entry => ({...entry,jobs:[...new Set(entry.jobs)],purchased:entry.refs.filter(ref => ref.buy>0).every(ref => ref.purchased),loaded:entry.refs.length>0 && entry.refs.every(ref => ref.loaded)})).sort((a,b) => Number(b.buy>0)-Number(a.buy>0) || getCategory(a.item.category).name.localeCompare(getCategory(b.item.category).name) || a.item.name.localeCompare(b.item.name));
+     return {jobs,tools:toolRows,materials:materialRows};
+   }
+@@ -671,7 +777,7 @@
+     document.querySelectorAll('.app-view').forEach(view => view.classList.toggle('active', view.dataset.view === state.activeView));
+     const jobViews=new Set(['job','tools','materials','load']);
+     let mainActive=jobViews.has(state.activeView) ? state.returnView : state.activeView;
+-    if (state.activeView==='warehouse') mainActive=state.warehouseMode==='materials' ? 'warehouse-materials' : 'warehouse-tools';
++    if (state.activeView==='warehouse') mainActive='warehouse-all';
+     document.querySelectorAll('.nav-item').forEach(button => button.classList.toggle('active', button.dataset.go === mainActive));
+     document.querySelectorAll('[data-current-job-name]').forEach(node => { node.textContent=(state.jobName || '').trim() || 'Nuovo cantiere'; });
+     document.querySelectorAll('[data-job-tab]').forEach(button => {
+@@ -821,14 +927,43 @@
+ 
+   function renderTodayChecklist() {
+     if (!els.todayChecklistCard) return;
+-    const groups=buildTodayChecklist(localISODate());
+-    const total=groups.reduce((sum,group) => sum+group.items.length,0);
+-    els.todayChecklistCard.hidden=groups.length===0;
++    const aggregate=aggregateDay(localISODate());
++    const pendingTools=aggregate.tools.filter(row => !row.loaded);
++    const pendingMaterials=aggregate.materials.filter(row => !row.loaded);
++    const total=pendingTools.length+pendingMaterials.length;
++    els.todayChecklistCard.hidden=total===0;
+     els.todayChecklistCount.textContent=String(total);
+-    els.todayChecklistList.innerHTML=groups.map(group => `<article class="checklist-job-group">
+-      <h3>${escapeHTML(group.jobName)}</h3>
+-      <div class="checklist-rows">${group.items.map(item => `<label class="checklist-row"><input data-job-id="${escapeAttr(group.jobId)}" data-kind="${item.kind}" data-item-id="${escapeAttr(item.id)}" type="checkbox"><span class="checklist-icon">${item.icon}</span><span class="checklist-text">${escapeHTML(item.name)}</span></label>`).join('')}</div>
+-    </article>`).join('');
++
++    const toolRows=pendingTools.map(row => {
++      const inputId=`dash-tool-${escapeAttr(row.id)}`;
++      return `<label class="checklist-row pickup-row" for="${inputId}"><input id="${inputId}" data-dashboard-tool-load="${escapeAttr(row.id)}" type="checkbox"><span class="checklist-icon">${escapeHTML(row.item.icon || '🔧')}</span><span class="checklist-text"><strong>${escapeHTML(row.item.name)}</strong><small>${escapeHTML(row.jobs.join(' · '))}</small></span><span class="pickup-qty">${formatQty(row.qty)} ${escapeHTML(row.item.unit)}</span></label>`;
++    }).join('');
++
++    const materialRows=pendingMaterials.map(row => {
++      const needsBuy=row.buy>0 && !row.purchased;
++      const inputId=`dash-material-${escapeAttr(row.id)}`;
++      const status=needsBuy ? `Da comprare · ${formatQty(row.buy)} ${row.item.unit}` : `Da prendere · ${formatQty(row.need)} ${row.item.unit}`;
++      return `<label class="checklist-row pickup-row ${needsBuy?'needs-buy':''}" for="${inputId}"><input id="${inputId}" data-dashboard-material-id="${escapeAttr(row.id)}" data-dashboard-material-action="${needsBuy?'purchase':'load'}" type="checkbox"><span class="checklist-icon">${needsBuy?'🛒':escapeHTML(row.item.icon || '📦')}</span><span class="checklist-text"><strong>${escapeHTML(row.item.name)}</strong><small>${escapeHTML(row.jobs.join(' · '))}</small></span><span class="pickup-status">${escapeHTML(status)}</span></label>`;
++    }).join('');
++
++    els.todayChecklistList.innerHTML=[
++      toolRows ? `<section class="dashboard-pickup-group"><h3>🔧 Attrezzi <span>${pendingTools.length}</span></h3>${toolRows}</section>` : '',
++      materialRows ? `<section class="dashboard-pickup-group"><h3>📦 Materiali <span>${pendingMaterials.length}</span></h3>${materialRows}</section>` : ''
++    ].join('');
++
++    const noteGroups=jobsForDate(localISODate(),false).map(list => {
++      const notes=(list.state?.reminders || []).filter(item => !item.done);
++      return {jobId:list.id,jobName:list.jobName,notes};
++    }).filter(group => group.notes.length);
++    const noteTotal=noteGroups.reduce((sum,group) => sum+group.notes.length,0);
++    if (els.todayNotesCard) els.todayNotesCard.hidden=noteTotal===0;
++    if (els.todayNotesCount) els.todayNotesCount.textContent=String(noteTotal);
++    if (els.todayNotesList) {
++      els.todayNotesList.innerHTML=noteGroups.map(group => `<article class="checklist-job-group note-job-group">
++        <h3>${escapeHTML(group.jobName)}</h3>
++        <div class="checklist-rows">${group.notes.map(note => `<label class="checklist-row note-row"><input data-job-id="${escapeAttr(group.jobId)}" data-kind="reminder" data-item-id="${escapeAttr(note.id)}" type="checkbox"><span class="checklist-icon">📝</span><span class="checklist-text">${escapeHTML(note.text)}</span></label>`).join('')}</div>
++      </article>`).join('');
++    }
+   }
+ 
+   function toggleChecklistItem(jobId,kind,itemId,checked) {
+@@ -888,7 +1023,7 @@
+     const total=allRows.length;
+     els.todayDateLabel.textContent=fullDayLabel(date).replace(/^./,char => char.toLocaleUpperCase('it-IT'));
+     els.todayJobCount.textContent=String(jobs.length);
+-    els.todayToolCount.textContent=`${aggregate.tools.length} attrezz${aggregate.tools.length===1?'o':'i'}`;
++    els.todayToolCount.textContent=`${allRows.filter(row => !row.loaded).length} da preparare`;
+     els.todayBuyCount.textContent=`${buyRows.length} da comprare`;
+     els.todayLoadProgress.textContent=`${loaded} / ${total}`;
+     if (!activeJobs.length) {
+@@ -950,24 +1085,59 @@
+     if (els.warehouseDate.value!==date) els.warehouseDate.value=date;
+     els.warehouseDateRelation.textContent=dateRelationLabel(date);
+     const aggregate=aggregateDay(date);
+-    if (els.warehouseTitle) els.warehouseTitle.textContent=state.warehouseMode==='materials'?'Materiali':'Attrezzi';
++    const query=normalize(String(state.warehouseSearch || '').trim());
++    const matches=row => {
++      if (!query) return true;
++      const hay=normalize([
++        row.item?.name,
++        row.item?.note,
++        getCategory(row.item?.category).name,
++        ...(row.jobs || [])
++      ].filter(Boolean).join(' '));
++      return hay.includes(query);
++    };
++    const toolRows=aggregate.tools.filter(matches);
++    const materialRows=aggregate.materials.filter(matches);
++
++    if (els.warehouseTitle) els.warehouseTitle.textContent='Cosa prendere';
+     const headingText=document.querySelector('#view-warehouse .page-heading p');
+-    if (headingText) headingText.textContent=state.warehouseMode==='materials'?'Cosa prendere in magazzino e cosa comprare.':'Cosa caricare per i cantieri della giornata.';
++    if (headingText) headingText.textContent=state.warehouseMode==='all'
++      ? 'Attrezzi e materiali insieme per i cantieri della giornata.'
++      : state.warehouseMode==='materials'
++        ? 'Solo materiali da prendere o comprare.'
++        : 'Solo attrezzi da preparare e caricare.';
++
++    if (els.warehouseSearch && els.warehouseSearch.value!==state.warehouseSearch) els.warehouseSearch.value=state.warehouseSearch;
++    els.warehouseAllBtn?.classList.toggle('active',state.warehouseMode==='all');
+     els.warehouseToolsBtn.classList.toggle('active',state.warehouseMode==='tools');
+     els.warehouseMaterialsBtn.classList.toggle('active',state.warehouseMode==='materials');
+-    els.warehouseToolsPane.hidden=state.warehouseMode!=='tools';
+-    els.warehouseMaterialsPane.hidden=state.warehouseMode!=='materials';
++    els.warehouseToolsPane.hidden=state.warehouseMode==='materials';
++    els.warehouseMaterialsPane.hidden=state.warehouseMode==='tools';
++
+     const jobNames=aggregate.jobs.map(list => list.jobName);
+     els.warehouseDaySummary.innerHTML=`<div><strong>${aggregate.jobs.length} cantier${aggregate.jobs.length===1?'e':'i'}</strong><small>${escapeHTML(jobNames.slice(0,3).join(' · ') || 'Nessun lavoro programmato')}</small></div><div class="warehouse-summary-chips"><span>🔧 ${aggregate.tools.length}</span><span>📦 ${aggregate.materials.length}</span></div>`;
+-    const loadedTools=aggregate.tools.filter(row => row.loaded).length;
+-    const loadedMaterials=aggregate.materials.filter(row => row.loaded).length;
+-    els.warehouseFocusProgress.textContent=state.warehouseMode==='tools' ? `${loadedTools} / ${aggregate.tools.length}` : `${loadedMaterials} / ${aggregate.materials.length}`;
+-    els.warehouseToolEmpty.hidden=aggregate.tools.length>0;
+-    els.warehouseToolList.innerHTML=aggregate.tools.map(row => { const inputId=`focus-tool-${escapeAttr(row.id)}`; return `<article class="daily-check-row ${row.loaded?'done':''}"><label class="daily-main-check" for="${inputId}"><input id="${inputId}" type="checkbox" data-focus-tool-load="${escapeAttr(row.id)}" ${row.loaded?'checked':''}><span class="daily-check-icon">${escapeHTML(row.item.icon)}</span><span class="daily-check-copy"><strong>${escapeHTML(row.item.name)}</strong><small>${escapeHTML(row.jobs.join(' · '))}</small></span><span class="daily-qty">${formatQty(row.qty)} ${escapeHTML(row.item.unit)}</span></label></article>`; }).join('');
+-    els.warehouseMaterialEmpty.hidden=aggregate.materials.length>0;
+-    const toBuy=aggregate.materials.filter(row => row.buy>0);
+-    const fromStock=aggregate.materials.filter(row => row.buy<=0);
+-    els.warehouseMaterialList.innerHTML=[toBuy.length?`<section class="daily-material-group"><h3>🛒 Da comprare <span>${toBuy.length}</span></h3>${toBuy.map(row => renderAggregatedMaterialRow(row)).join('')}</section>`:'',fromStock.length?`<section class="daily-material-group"><h3>🏠 Da prendere in magazzino <span>${fromStock.length}</span></h3>${fromStock.map(row => renderAggregatedMaterialRow(row)).join('')}</section>`:''].join('');
++
++    const allVisible=state.warehouseMode==='tools' ? toolRows : state.warehouseMode==='materials' ? materialRows : [...toolRows,...materialRows];
++    const loadedVisible=allVisible.filter(row => row.loaded).length;
++    els.warehouseFocusProgress.textContent=`${loadedVisible} / ${allVisible.length}`;
++
++    els.warehouseToolEmpty.hidden=toolRows.length>0;
++    els.warehouseToolEmpty.querySelector('strong').textContent=query ? 'Nessun attrezzo trovato' : 'Nessun attrezzo previsto';
++    els.warehouseToolEmpty.querySelector('p').textContent=query ? 'Prova un’altra parola nella ricerca.' : 'Programma un cantiere o scegli un’altra data.';
++    els.warehouseToolList.innerHTML=toolRows.map(row => {
++      const inputId=`focus-tool-${escapeAttr(row.id)}`;
++      return `<article class="daily-check-row ${row.loaded?'done':''}"><label class="daily-main-check" for="${inputId}"><input id="${inputId}" type="checkbox" data-focus-tool-load="${escapeAttr(row.id)}" ${row.loaded?'checked':''}><span class="daily-check-icon">${escapeHTML(row.item.icon)}</span><span class="daily-check-copy"><strong>${escapeHTML(row.item.name)}</strong><small>${escapeHTML(row.jobs.join(' · '))}</small></span><span class="daily-qty">${formatQty(row.qty)} ${escapeHTML(row.item.unit)}</span></label></article>`;
++    }).join('');
++
++    els.warehouseMaterialEmpty.hidden=materialRows.length>0;
++    els.warehouseMaterialEmpty.querySelector('strong').textContent=query ? 'Nessun materiale trovato' : 'Nessun materiale previsto';
++    els.warehouseMaterialEmpty.querySelector('p').textContent=query ? 'Prova un’altra parola nella ricerca.' : 'Programma un cantiere o scegli un’altra data.';
++    const toBuy=materialRows.filter(row => row.buy>0);
++    const fromStock=materialRows.filter(row => row.buy<=0);
++    els.warehouseMaterialList.innerHTML=[
++      toBuy.length?`<section class="daily-material-group"><h3>🛒 Da comprare <span>${toBuy.length}</span></h3>${toBuy.map(row => renderAggregatedMaterialRow(row)).join('')}</section>`:'',
++      fromStock.length?`<section class="daily-material-group"><h3>🏠 Da prendere <span>${fromStock.length}</span></h3>${fromStock.map(row => renderAggregatedMaterialRow(row)).join('')}</section>`:''
++    ].join('');
+   }
+ 
+   function buildDayMaterialsText(date) {
+@@ -1563,12 +1733,22 @@
+     els.loadList.innerHTML = groups.map(group => {
+       const items = ids.map(getItem).filter(item => item && item.kind === group.kind).sort((a,b) => getCategory(a.category).name.localeCompare(getCategory(b.category).name) || a.name.localeCompare(b.name));
+       if (!items.length) return '';
+-      return `<section><h3 class="load-group-title">${group.title}</h3>${items.map(item => {
+-        const loaded = Boolean(state.loaded[item.id]);
+-        const blocked = item.kind === 'material' && !materialReady(item.id);
++      const pending=items.filter(item => !state.loaded[item.id]);
++      const done=items.filter(item => Boolean(state.loaded[item.id]));
++      const renderRow=item => {
++        const loaded=Boolean(state.loaded[item.id]);
++        const blocked=item.kind === 'material' && !materialReady(item.id);
+         return `<label class="load-row ${loaded ? 'loaded' : ''} ${blocked ? 'blocked' : ''}"><input type="checkbox" data-load-id="${escapeAttr(item.id)}" ${loaded ? 'checked' : ''} ${blocked ? 'disabled' : ''}><span><strong>${escapeHTML(item.name)}</strong><small>${escapeHTML(getCategory(item.category).name)}</small>${blocked ? '<span class="load-warning">Segna prima il materiale come comprato</span>' : ''}</span><small>× ${formatQty(selected[item.id])} ${escapeHTML(item.unit)}</small></label>`;
+-      }).join('')}</section>`;
++      };
++      return `<section class="load-check-section">
++        <div class="load-group-head"><h3 class="load-group-title">${group.title}</h3><span>${pending.length} da caricare</span></div>
++        ${pending.length ? `<div class="load-pending-list">${pending.map(renderRow).join('')}</div>` : '<div class="load-group-complete">✓ Tutto caricato</div>'}
++        ${done.length ? `<details class="load-done-group"><summary>✅ Caricati (${done.length})</summary><div class="load-done-list">${done.map(renderRow).join('')}</div></details>` : ''}
++      </section>`;
+     }).join('');
++    if (ids.length && percent === 100) {
++      els.loadSubtitle.textContent='Tutto caricato ✓ Puoi partire.';
++    }
+     if (state.activeView === 'load' && percent === 100 && ids.length) showToastOnce('Carico completo: tutto pronto!');
+   }
+ 
+@@ -1584,15 +1764,15 @@
+     const warehousePending=[...today.tools,...today.materials].filter(row => !row.loaded).length;
+     if (els.navTodayCount) els.navTodayCount.textContent=todayJobs;
+     if (els.navAgendaCount) els.navAgendaCount.textContent=future;
+-    if (els.navWarehouseCount) els.navWarehouseCount.textContent=today.tools.filter(row => !row.loaded).length;
++    if (els.navWarehouseCount) els.navWarehouseCount.textContent=warehousePending;
+     if (els.navMaterialsCount) els.navMaterialsCount.textContent=today.materials.filter(row => row.buy>0 && !row.purchased).length;
+     if (els.navMoreCount) els.navMoreCount.textContent=openReminderCount(state) || '';
+   }
+ 
+   function routeForState() {
+     if (state.activeView==='today') return '#/oggi';
+     if (state.activeView==='jobs') return '#/cantieri';
+-    if (state.activeView==='warehouse') return state.warehouseMode==='materials' ? '#/materiali' : '#/attrezzi';
++    if (state.activeView==='warehouse') return state.warehouseMode==='all' ? '#/cosa-prendere' : state.warehouseMode==='materials' ? '#/materiali' : '#/attrezzi';
+     if (state.currentListId) {
+       const suffix=state.activeView==='tools'?'/attrezzi':state.activeView==='materials'?'/materiali':state.activeView==='load'?'/carico':'';
+       return `#/cantiere/${encodeURIComponent(state.currentListId)}${suffix}`;
+@@ -1607,9 +1787,9 @@
+   }
+ 
+   function goTo(view,{fromHistory=false}={}) {
+-    if (view==='warehouse-tools' || view==='warehouse-materials') {
++    if (view==='warehouse-all' || view==='warehouse-tools' || view==='warehouse-materials') {
+       state.warehouseDate=state.warehouseDate || localISODate();
+-      state.warehouseMode=view==='warehouse-materials'?'materials':'tools';
++      state.warehouseMode=view==='warehouse-materials'?'materials':view==='warehouse-tools'?'tools':'all';
+       view='warehouse';
+     }
+     if (view==='job' && !hasCurrentJobContent()) { startNewJob(); return; }
+@@ -1637,6 +1817,7 @@
+       persistState(); render(); return;
+     }
+     if (hash==='#/cantieri') goTo('jobs',{fromHistory:true});
++    else if (hash==='#/cosa-prendere') { state.warehouseMode='all'; goTo('warehouse',{fromHistory:true}); }
+     else if (hash==='#/attrezzi') { state.warehouseMode='tools'; goTo('warehouse',{fromHistory:true}); }
+     else if (hash==='#/materiali') { state.warehouseMode='materials'; goTo('warehouse',{fromHistory:true}); }
+     else goTo('today',{fromHistory:true});
+@@ -1671,6 +1852,105 @@
+     state.purchased = {}; state.loaded = {}; cleanupState(); persistState('Kit aggiornati'); render();
+   }
+ 
++  function findToolByName(name) {
++    const key=normalize(String(name || '').trim());
++    if (!key) return null;
++    return getAllItems().find(item => item.kind === 'tool' && normalize(item.name) === key) || null;
++  }
++
++  function addToolById(id,{silent=false}={}) {
++    const item=getItem(id);
++    if (!item || item.kind !== 'tool') return null;
++    state.excludedItems = state.excludedItems.filter(entry => entry !== id);
++    state.manualItems[id] = Math.max(1,Number(state.manualItems[id] || selectedMap()[id] || 1));
++    delete state.loaded[id];
++    state.toolSearch='';
++    if (els.toolSearch) els.toolSearch.value='';
++    persistState('Attrezzo aggiunto');
++    render();
++    if (!silent) showToast(`${item.name} aggiunto alla checklist`);
++    return JSON.parse(JSON.stringify(item));
++  }
++
++  function addToolByName(name) {
++    const clean=String(name || '').trim().replace(/\s+/g,' ').slice(0,70);
++    if (!clean) return null;
++    const existing=findToolByName(clean);
++    if (existing) return addToolById(existing.id);
++    const base=slugify(clean) || 'attrezzo';
++    let id=`custom-${Date.now()}-${base}`;
++    let suffix=2;
++    while (getItem(id)) id=`custom-${Date.now()}-${base}-${suffix++}`;
++    const item=normalizeItem({
++      id,
++      name:clean,
++      kind:'tool',
++      category:'altro-attrezzo',
++      unit:'pz',
++      note:'Aggiunto dalla ricerca rapida',
++      icon:'🔧'
++    });
++    state.customItems.push(item);
++    state.manualItems[item.id]=1;
++    state.excludedItems=state.excludedItems.filter(entry => entry !== item.id);
++    state.toolSearch='';
++    if (els.toolSearch) els.toolSearch.value='';
++    persistState('Nuovo attrezzo salvato');
++    render();
++    showToast(`${clean} aggiunto e salvato per il futuro`);
++    return JSON.parse(JSON.stringify(item));
++  }
++
++  function findMaterialByName(name) {
++    const key=normalize(String(name || '').trim());
++    if (!key) return null;
++    return getAllItems().find(item => item.kind === 'material' && normalize(item.name) === key) || null;
++  }
++
++  function addMaterialById(id,{silent=false}={}) {
++    const item=getItem(id);
++    if (!item || item.kind !== 'material') return null;
++    state.excludedItems = state.excludedItems.filter(entry => entry !== id);
++    state.manualItems[id] = Math.max(1,Number(state.manualItems[id] || selectedMap()[id] || 1));
++    delete state.purchased[id];
++    delete state.loaded[id];
++    state.materialSearch='';
++    if (els.materialSearch) els.materialSearch.value='';
++    persistState('Materiale aggiunto');
++    render();
++    if (!silent) showToast(`${item.name} aggiunto alla lista materiali`);
++    return JSON.parse(JSON.stringify(item));
++  }
++
++  function addMaterialByName(name) {
++    const clean=String(name || '').trim().replace(/\s+/g,' ').slice(0,70);
++    if (!clean) return null;
++    const existing=findMaterialByName(clean);
++    if (existing) return addMaterialById(existing.id);
++    const base=slugify(clean) || 'materiale';
++    let id=`custom-${Date.now()}-${base}`;
++    let suffix=2;
++    while (getItem(id)) id=`custom-${Date.now()}-${base}-${suffix++}`;
++    const item=normalizeItem({
++      id,
++      name:clean,
++      kind:'material',
++      category:'altro-materiale',
++      unit:'confezioni',
++      note:'Aggiunto dalla ricerca rapida',
++      icon:'📦'
++    });
++    state.customItems.push(item);
++    state.manualItems[item.id]=1;
++    state.excludedItems=state.excludedItems.filter(entry => entry !== item.id);
++    state.materialSearch='';
++    if (els.materialSearch) els.materialSearch.value='';
++    persistState('Nuovo materiale salvato');
++    render();
++    showToast(`${clean} aggiunto e salvato per il futuro`);
++    return JSON.parse(JSON.stringify(item));
++  }
++
+   function addItem(id) {
+     if (!getItem(id)) return;
+     state.excludedItems = state.excludedItems.filter(item => item !== id);
+@@ -2097,7 +2377,8 @@
+   }
+ 
+   function setupEvents() {
+-    els.todayWarehouseBtn.addEventListener('click', () => { state.warehouseDate=localISODate(); state.warehouseMode='tools'; goTo('warehouse'); });
++    els.todayWarehouseBtn.addEventListener('click', () => { state.warehouseDate=localISODate(); state.warehouseMode='all'; goTo('warehouse'); });
++    els.todayOpenPickupBtn?.addEventListener('click', () => { state.warehouseDate=localISODate(); state.warehouseMode='all'; goTo('warehouse'); });
+     els.todayMaterialsBtn.addEventListener('click', () => { state.warehouseDate=localISODate(); state.warehouseMode='materials'; goTo('warehouse'); });
+     els.todayNewJobBtn.addEventListener('click', openQuickJobDialog);
+     els.quickJobForm.addEventListener('submit', event => { event.preventDefault(); submitQuickJob(); });
+@@ -2106,9 +2387,25 @@
+     els.jobCompleteBtn.addEventListener('click', completeCurrentJob);
+     els.todayOpenAgendaBtn.addEventListener('click', () => goTo('jobs'));
+     els.todayChecklistList?.addEventListener('change', event => {
++      const tool=event.target.closest('[data-dashboard-tool-load]');
++      const material=event.target.closest('[data-dashboard-material-id]');
++      if (tool) {
++        setDailyToolLoaded(localISODate(),tool.dataset.dashboardToolLoad,tool.checked);
++        if (tool.checked) showToast('✓ Attrezzo caricato');
++        return;
++      }
++      if (material) {
++        const id=material.dataset.dashboardMaterialId;
++        const action=material.dataset.dashboardMaterialAction;
++        if (action==='purchase') setDailyMaterialPurchased(localISODate(),id,material.checked);
++        else setDailyMaterialLoaded(localISODate(),id,material.checked);
++        if (material.checked) showToast(action==='purchase'?'✓ Materiale comprato':'✓ Materiale caricato');
++      }
++    });
++    els.todayNotesList?.addEventListener('change', event => {
+       const input=event.target.closest('input[type=checkbox][data-job-id]'); if (!input) return;
+-      toggleChecklistItem(input.dataset.jobId,input.dataset.kind,input.dataset.itemId,input.checked);
+-      if (input.checked) showToast('✓ Fatto');
++      toggleChecklistItem(input.dataset.jobId,'reminder',input.dataset.itemId,input.checked);
++      if (input.checked) showToast('✓ Nota completata');
+     });
+     els.homeCalendarPrevBtn.addEventListener('click', () => { const [y,m]=calendarViewMonth.split('-').map(Number); const d=new Date(y,m-2,1); calendarViewMonth=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`; renderTodayCalendar(); });
+     els.homeCalendarNextBtn.addEventListener('click', () => { const [y,m]=calendarViewMonth.split('-').map(Number); const d=new Date(y,m,1); calendarViewMonth=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`; renderTodayCalendar(); });
+@@ -2133,7 +2430,9 @@
+     els.warehousePrevBtn.addEventListener('click', () => { state.warehouseDate=shiftISODate(state.warehouseDate,-1); persistState(); renderWarehouseFocus(); });
+     els.warehouseNextBtn.addEventListener('click', () => { state.warehouseDate=shiftISODate(state.warehouseDate,1); persistState(); renderWarehouseFocus(); });
+     els.warehouseTodayBtn.addEventListener('click', () => { state.warehouseDate=localISODate(); persistState(); renderWarehouseFocus(); });
+-    [els.warehouseToolsBtn,els.warehouseMaterialsBtn].forEach(button => button.addEventListener('click', () => { state.warehouseMode=button.dataset.warehouseMode; persistState(); renderWarehouseFocus(); }));
++    [els.warehouseAllBtn,els.warehouseToolsBtn,els.warehouseMaterialsBtn].filter(Boolean).forEach(button => button.addEventListener('click', () => { state.warehouseMode=button.dataset.warehouseMode; persistState(); renderWarehouseFocus(); renderViews(); updateRoute({replace:true}); }));
++    els.warehouseSearch?.addEventListener('input', event => { state.warehouseSearch=event.target.value; persistState(); renderWarehouseFocus(); });
++    els.clearWarehouseSearch?.addEventListener('click', () => { state.warehouseSearch=''; if (els.warehouseSearch) els.warehouseSearch.value=''; persistState(); renderWarehouseFocus(); });
+     els.warehouseToolList.addEventListener('change', event => { const input=event.target.closest('[data-focus-tool-load]'); if (input) setDailyToolLoaded(state.warehouseDate,input.dataset.focusToolLoad,input.checked); });
+     els.warehouseMaterialList.addEventListener('change', event => { const purchase=event.target.closest('[data-focus-material-purchase]'); const loaded=event.target.closest('[data-focus-material-load]'); if (purchase) setDailyMaterialPurchased(state.warehouseDate,purchase.dataset.focusMaterialPurchase,purchase.checked); if (loaded) setDailyMaterialLoaded(state.warehouseDate,loaded.dataset.focusMaterialLoad,loaded.checked); });
+     els.warehouseMarkToolsBtn.addEventListener('click', () => { setAllDailyToolsLoaded(state.warehouseDate,true); showToast('Attrezzi del giorno segnati'); });
+@@ -2533,6 +2832,12 @@
+     version: APP_VERSION,
+     getState: () => JSON.parse(JSON.stringify(state)),
+     getSavedJobs: () => JSON.parse(JSON.stringify(getSavedLists())),
++    getTools: () => JSON.parse(JSON.stringify(getAllItems().filter(item => item.kind === 'tool'))),
++    getMaterials: () => JSON.parse(JSON.stringify(getAllItems().filter(item => item.kind === 'material'))),
++    addToolById: (id) => addToolById(String(id || '')),
++    addToolByName: (name) => addToolByName(String(name || '')),
++    addMaterialById: (id) => addMaterialById(String(id || '')),
++    addMaterialByName: (name) => addMaterialByName(String(name || '')),
+     refresh: () => render(),
+     reloadFromStorage: () => { loadState(); render(); },
+     openJobById: (id) => loadSavedList(String(id || '')),
+diff --git a/public/ge360-jobsite-report.js b/public/ge360-jobsite-report.js
+--- a/public/ge360-jobsite-report.js
++++ b/public/ge360-jobsite-report.js
+@@ -50,6 +50,7 @@
+     return {
+       reportedAt: new Date().toISOString(),
+       jobsiteId: ctx.jobsiteId,
++      clientId: ctx.clientId || state?.ge360ClientId || null,
+       toolsCount: tools,
+       loadedToolsCount: Math.min(load.loaded, tools || load.loaded),
+       materialsCount: Math.max(materialPreview, buy),
+@@ -78,11 +79,28 @@
+     return url.toString();
+   }
+ 
+-  function goBackToCenter() {
++  async function openGe360Uri(url) {
++    const bridge = window.Capacitor?.Plugins?.Ge360Bridge;
++    if (bridge?.openGe360Uri) {
++      try {
++        const result = await bridge.openGe360Uri({ url });
++        if (result?.opened) return true;
++      } catch {}
++    }
++    try {
++      window.location.href = url;
++      return true;
++    } catch {
++      return false;
++    }
++  }
++
++  async function goBackToCenter() {
+     const ctx = context();
+     if (!ctx) return;
+     const payload = buildReport(ctx);
+-    window.location.href = callbackUrl(ctx, payload);
++    const opened = await openGe360Uri(callbackUrl(ctx, payload));
++    if (!opened) window.dispatchEvent(new CustomEvent('ge360:return-error', { detail: { jobsiteId: ctx.jobsiteId } }));
+   }
+ 
+   function ensureButton() {
+diff --git a/public/index.html b/public/index.html
+--- a/public/index.html
++++ b/public/index.html
+@@ -32,7 +32,6 @@
+ <section aria-labelledby="todayTitle" class="app-view active" data-view="today" id="view-today">
+ <div class="page-heading today-heading">
+ <div>
+-<span class="eyebrow">LA TUA GIORNATA</span>
+ <h1 id="todayTitle">Oggi</h1>
+ <p id="todayDateLabel">Cantieri e preparazione della giornata.</p>
+ </div>
+@@ -45,13 +44,41 @@ <h1 id="todayTitle">Oggi</h1>
+ </div>
+ <span class="today-progress-pill" id="todayLoadProgress">0 / 0</span>
+ </section>
+-<section aria-labelledby="todayChecklistTitle" class="today-checklist-card" hidden="" id="todayChecklistCard">
++<section aria-labelledby="todayChecklistTitle" class="today-checklist-card today-pickup-card" hidden="" id="todayChecklistCard">
+ <div class="section-heading">
+-<div><span class="eyebrow">STAMATTINA</span><h2 id="todayChecklistTitle">Da fare, prendere e portare</h2></div>
++<div><h2 id="todayChecklistTitle">Cosa prendere</h2></div>
+ <span class="count-badge" id="todayChecklistCount">0</span>
+ </div>
+-<div class="today-checklist-list" id="todayChecklistList"></div>
++<div class="today-checklist-list today-pickup-list" id="todayChecklistList"></div>
++<button class="overview-open-btn today-open-pickup" id="todayOpenPickupBtn" type="button">Apri tutto</button>
+ </section>
++<section aria-labelledby="todayNotesTitle" class="today-checklist-card today-notes-card" hidden="" id="todayNotesCard">
++<div class="section-heading">
++<div><h2 id="todayNotesTitle">Note</h2></div>
++<span class="count-badge" id="todayNotesCount">0</span>
++</div>
++<div class="today-checklist-list today-notes-list" id="todayNotesList"></div>
++</section>
++
++<section aria-labelledby="teamInboxTitle" class="team-inbox-card" hidden="" id="teamInboxCard">
++<div class="section-heading team-inbox-heading"><div><span class="eyebrow">SQUADRA</span><h2 id="teamInboxTitle">Richieste dai cantieri</h2></div><span class="count-badge" id="teamInboxCount">0</span></div>
++<div class="team-inbox-list" id="teamInboxList"></div>
++</section>
++
++<div aria-label="Azioni rapide" class="today-actions today-actions-simple">
++<button class="today-action legacy-hidden" hidden="" id="todayWarehouseBtn" type="button"><span>🧰</span><strong>Cosa prendere</strong><small id="todayToolCount">0 da preparare</small></button>
++<button class="today-action legacy-hidden" hidden="" id="todayMaterialsBtn" type="button"><span>📦</span><strong>Materiali</strong><small id="todayBuyCount">0 da comprare</small></button>
++<button class="today-action today-new-job-simple" id="todayNewJobBtn" type="button"><span>＋</span><strong>Nuovo cantiere</strong></button>
++</div><section aria-labelledby="todayJobsTitle" class="today-section">
++<div class="section-heading">
++<div><h2 id="todayJobsTitle">Cantieri di oggi</h2></div>
++<span class="count-badge" id="todayJobCount">0</span>
++</div>
++<div class="today-job-list" id="todayJobs"></div>
++<div class="empty-state compact-empty" id="todayEmpty"><span>🗓️</span><strong>Nessun cantiere oggi</strong><p>Puoi programmare un lavoro futuro oppure preparare già la lista di domani.</p></div>
++</section><details class="today-more-panel">
++<summary><span>📅</span><strong>Agenda e prossimi cantieri</strong><span>›</span></summary>
++<div class="today-more-content">
+ <section aria-labelledby="homeCalendarTitle" class="home-calendar-card" id="homeCalendarCard">
+ <div class="home-calendar-head">
+ <button aria-label="Mese precedente" class="agenda-arrow" id="homeCalendarPrevBtn" type="button">‹</button>
+@@ -65,23 +92,6 @@ <h2 id="homeCalendarTitle">Agosto 2026</h2>
+ <button class="text-btn" id="homeCalendarTodayBtn" type="button">Torna a oggi</button>
+ </div>
+ </section>
+-<section aria-labelledby="teamInboxTitle" class="team-inbox-card" hidden="" id="teamInboxCard">
+-<div class="section-heading team-inbox-heading"><div><span class="eyebrow">SQUADRA</span><h2 id="teamInboxTitle">Richieste dai cantieri</h2></div><span class="count-badge" id="teamInboxCount">0</span></div>
+-<div class="team-inbox-list" id="teamInboxList"></div>
+-</section>
+-<div aria-label="Azioni rapide" class="today-actions">
+-<button class="today-action primary" id="todayWarehouseBtn" type="button"><span>🔧</span><strong>Magazzino di oggi</strong><small id="todayToolCount">0 attrezzi</small></button>
+-<button class="today-action" id="todayMaterialsBtn" type="button"><span>📦</span><strong>Materiali di oggi</strong><small id="todayBuyCount">0 da comprare</small></button>
+-<button class="today-action" id="todayNewJobBtn" type="button"><span>＋</span><strong>Nuovo cantiere</strong><small>Prepara e programma</small></button>
+-</div>
+-<section aria-labelledby="todayJobsTitle" class="today-section">
+-<div class="section-heading">
+-<div><span class="eyebrow">OGGI</span><h2 id="todayJobsTitle">Cantieri programmati</h2></div>
+-<span class="count-badge" id="todayJobCount">0</span>
+-</div>
+-<div class="today-job-list" id="todayJobs"></div>
+-<div class="empty-state compact-empty" id="todayEmpty"><span>🗓️</span><strong>Nessun cantiere oggi</strong><p>Puoi programmare un lavoro futuro oppure preparare già la lista di domani.</p></div>
+-</section>
+ <section aria-labelledby="nextJobsTitle" class="today-section next-section">
+ <div class="section-heading">
+ <div><span class="eyebrow">PROSSIMI</span><h2 id="nextJobsTitle">I prossimi cantieri</h2></div>
+@@ -90,6 +100,9 @@ <h2 id="homeCalendarTitle">Agosto 2026</h2>
+ <div class="today-next-list" id="todayNextJobs"></div>
+ <p class="schedule-empty" id="todayNextEmpty">Nessun altro cantiere programmato.</p>
+ </section>
++</div>
++</details>
++
+ <div class="today-safety-row">
+ <span>🛡️</span><div><strong>Backup</strong><small id="todayBackupStatus">Nessun backup ancora salvato</small></div>
+ <button class="secondary-button compact-action" id="todayBackupBtn" type="button">Salva ora</button>
+@@ -168,7 +181,7 @@ <h2 id="scheduleTitle">Cantieri del giorno</h2>
+ </section>
+ <section aria-labelledby="warehouseTitle" class="app-view" data-view="warehouse" id="view-warehouse">
+ <div class="page-heading compact-heading">
+-<div><span class="eyebrow">MODALITÀ OPERATIVA</span><h1 id="warehouseTitle">Magazzino</h1><p>Una checklist pulita per preparare una giornata alla volta.</p></div>
++<div><h1 id="warehouseTitle">Cosa prendere</h1></div>
+ <span class="count-badge success" id="warehouseFocusProgress">0 / 0</span>
+ </div>
+ <div aria-label="Data della preparazione" class="focus-date-control">
+@@ -178,17 +191,23 @@ <h2 id="scheduleTitle">Cantieri del giorno</h2>
+ <button class="agenda-today" id="warehouseTodayBtn" type="button">Oggi</button>
+ </div>
+ <section class="warehouse-day-summary" id="warehouseDaySummary"></section>
+-<div aria-label="Cosa preparare" class="focus-mode-switch" role="tablist">
+-<button class="active" data-warehouse-mode="tools" id="warehouseToolsBtn" role="tab" type="button">🔧 Attrezzi</button>
++<div class="pickup-search">
++<span aria-hidden="true">⌕</span>
++<input autocomplete="off" id="warehouseSearch" inputmode="search" placeholder="Cerca attrezzi o materiali…" type="search"/>
++<button aria-label="Cancella ricerca" id="clearWarehouseSearch" type="button">×</button>
++</div>
++<div aria-label="Cosa preparare" class="focus-mode-switch pickup-mode-switch" role="tablist">
++<button class="active" data-warehouse-mode="all" id="warehouseAllBtn" role="tab" type="button">🧰 Tutto</button>
++<button data-warehouse-mode="tools" id="warehouseToolsBtn" role="tab" type="button">🔧 Attrezzi</button>
+ <button data-warehouse-mode="materials" id="warehouseMaterialsBtn" role="tab" type="button">📦 Materiali</button>
+ </div>
+ <div class="focus-pane" id="warehouseToolsPane">
+-<div class="focus-pane-heading"><div><strong>Da portare</strong><small>Attrezzi uniti senza doppioni per tutti i cantieri del giorno.</small></div><button class="secondary-button compact-action" id="warehouseMarkToolsBtn" type="button">Segna tutti</button></div>
++<div class="focus-pane-heading"><div><strong>🔧 Attrezzi</strong></div><button class="secondary-button compact-action" id="warehouseMarkToolsBtn" type="button">Segna tutti</button></div>
+ <div class="daily-check-list focus-check-list" id="warehouseToolList"></div>
+ <div class="empty-state compact-empty" id="warehouseToolEmpty"><span>🔧</span><strong>Nessun attrezzo previsto</strong><p>Programma un cantiere o scegli un’altra data.</p></div>
+ </div>
+ <div class="focus-pane" hidden="" id="warehouseMaterialsPane">
+-<div class="focus-pane-heading"><div><strong>Da prendere e comprare</strong><small>Prima spunta gli acquisti, poi ciò che hai caricato.</small></div><button class="secondary-button compact-action" id="warehouseShareBtn" type="button">Condividi</button></div>
++<div class="focus-pane-heading"><div><strong>📦 Materiali</strong></div><button class="secondary-button compact-action" id="warehouseShareBtn" type="button">Condividi</button></div>
+ <div class="daily-material-list focus-material-list" id="warehouseMaterialList"></div>
+ <div class="empty-state compact-empty" id="warehouseMaterialEmpty"><span>📦</span><strong>Nessun materiale previsto</strong><p>Programma un cantiere o scegli un’altra data.</p></div>
+ </div>
+@@ -482,7 +501,7 @@ <h1 id="loadTitle">Carica il furgone</h1>
+ <div class="empty-state" hidden="" id="loadEmpty"><span>🚐</span><strong>Lista vuota</strong><p>Seleziona prima una lavorazione e i relativi kit.</p></div>
+ </section>
+ </main>
+-<nav aria-label="Navigazione principale" class="bottom-nav four-nav"><button class="nav-item active" data-go="today" type="button"><span>☀️</span><strong>Oggi</strong><small id="navTodayCount">0</small></button><button class="nav-item" data-go="jobs" type="button"><span>📅</span><strong>Cantieri</strong><small id="navAgendaCount">0</small></button><button class="nav-item" data-go="warehouse-tools" type="button"><span>🔧</span><strong>Attrezzi</strong><small id="navWarehouseCount">0</small></button><button class="nav-item" data-go="warehouse-materials" type="button"><span>📦</span><strong>Materiali</strong><small id="navMaterialsCount">0</small></button></nav>
++<nav aria-label="Navigazione principale" class="bottom-nav three-nav"><button class="nav-item active" data-go="today" type="button"><span>☀️</span><strong>Oggi</strong><small id="navTodayCount">0</small></button><button class="nav-item" data-go="jobs" type="button"><span>📅</span><strong>Cantieri</strong><small id="navAgendaCount">0</small></button><button class="nav-item" data-go="warehouse-all" type="button"><span>🧰</span><strong>Cosa prendere</strong><small id="navWarehouseCount">0</small></button></nav>
+ </div>
+ <dialog class="app-dialog menu-dialog" id="appMenuDialog">
+ <div class="dialog-header"><div><span class="eyebrow">APP E SICUREZZA</span><h2>Menu</h2></div><button aria-label="Chiudi" class="icon-btn dialog-close" id="closeAppMenuBtn" type="button">×</button></div>
+diff --git a/public/layout-v29.css b/public/layout-v29.css
+new file mode 100644
+--- /dev/null
++++ b/public/layout-v29.css
+@@ -0,0 +1,123 @@
++/* GE360 Attrezzi — Layout v2.9
++   Mobile-first usability layer. No storage/cloud/business logic changes. */
++
++:root{
++  --v29-touch:52px;
++  --v29-nav-height:76px;
++  --v29-sheet-radius:24px;
++  --v29-fast-shadow:0 4px 16px rgba(23,23,23,.055);
++}
++
++html[data-layout-ui="2.9"]{scroll-padding-top:76px}
++body.v29-ui main{padding-top:14px;padding-bottom:calc(104px + env(safe-area-inset-bottom))}
++body.v29-ui .content-section{margin-top:18px}
++body.v29-ui .page-heading{margin-bottom:12px}
++body.v29-ui .page-heading h1{font-size:clamp(1.42rem,5vw,1.72rem)}
++body.v29-ui .page-heading p{line-height:1.35}
++
++/* Top bar: less chrome, more room for the actual job. */
++body.v29-ui #appMenuBtn{display:none!important}
++body.v29-ui .topbar{min-height:62px;padding-top:8px;padding-bottom:8px}
++body.v29-ui .brand-mark{width:42px;height:42px}
++body.v29-ui .sync-status-compact{min-height:40px}
++
++/* Home: the monthly calendar is useful, but it no longer owns the first screen. */
++.v29-calendar-launch{
++  display:grid;grid-template-columns:42px minmax(0,1fr) auto;align-items:center;gap:10px;
++  width:100%;min-height:62px;margin:0 0 12px;padding:8px 10px;border:1px solid var(--border);
++  border-radius:17px;background:var(--panel);color:var(--text);text-align:left;box-shadow:var(--v29-fast-shadow)
++}
++.v29-calendar-launch>span:first-child{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:var(--panel-soft);font-size:1.25rem}
++.v29-calendar-launch strong,.v29-calendar-launch small{display:block;min-width:0}
++.v29-calendar-launch strong{font-size:.94rem}
++.v29-calendar-launch small{margin-top:2px;color:var(--muted);font-size:.75rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
++.v29-calendar-launch .v29-chevron{font-size:1.25rem;color:var(--muted);transition:transform .16s ease}
++.v29-calendar-launch[aria-expanded="true"] .v29-chevron{transform:rotate(180deg)}
++#homeCalendarCard.v29-collapsed{display:none!important}
++body.v29-ui .home-calendar-card{margin-top:-2px;box-shadow:none}
++
++/* Quick actions should scan like buttons, not like three miniature forms. */
++body.v29-ui .today-actions{display:flex;gap:9px;overflow-x:auto;margin:0 -2px 16px;padding:2px;scroll-snap-type:x proximity;scrollbar-width:none}
++body.v29-ui .today-actions::-webkit-scrollbar{display:none}
++body.v29-ui .today-action{flex:1 0 150px;min-width:150px;min-height:76px;scroll-snap-align:start;box-shadow:var(--v29-fast-shadow)}
++
++/* Agenda had two separate controls for the same three panes. Keep the metric row only. */
++body.v29-ui #dailyTabs{display:none!important}
++body.v29-ui .day-metrics{margin-bottom:12px;gap:6px}
++body.v29-ui .day-metric{min-height:64px;border-radius:15px}
++body.v29-ui .day-metric.active{outline:2px solid rgba(239,125,0,.22);outline-offset:1px}
++body.v29-ui .schedule-panel.daily-agenda{padding-bottom:12px}
++
++/* Job screen: v2.4 already simplified the flow; v2.9 makes it denser without shrinking touch targets. */
++body.v29-ui.v24-job-mode #view-job .job-quick-actions{gap:8px}
++body.v29-ui.v24-job-mode #view-job .job-quick-actions>button{min-height:70px;padding:8px 12px;border-radius:16px;box-shadow:var(--v29-fast-shadow)}
++body.v29-ui.v24-job-mode #view-job .job-quick-actions>button>span{width:48px;height:48px;border-radius:14px;font-size:1.55rem}
++body.v29-ui .v24-job-secondary-actions{margin-top:9px}
++body.v29-ui .v24-job-secondary-actions button{min-height:50px}
++
++/* Notes: treat them like a real field notebook. */
++body.v29-ui.v24-notes-mode #view-job .v24-notepad{padding:12px;border-radius:18px}
++body.v29-ui.v24-notes-mode #jobNotes{min-height:min(42dvh,390px);padding:15px 16px;font-size:1.06rem;line-height:1.58}
++body.v29-ui.v24-notes-mode #view-job .reminder-panel{padding:12px;border-radius:18px}
++body.v29-ui.v24-notes-mode #view-job .reminder-entry .text-input{font-size:16px}
++
++/* Tool/material selection: thumb-friendly cards with less visual noise. */
++body.v29-ui.v24-tools-mode #view-tools .sticky-filter,
++body.v29-ui.v24-materials-mode #view-materials .sticky-filter{position:sticky;top:62px;z-index:34;padding:5px 0 8px;background:linear-gradient(var(--bg) 88%,rgba(243,243,241,0))}
++body.v29-ui.v24-tools-mode #view-tools .search-box,
++body.v29-ui.v24-materials-mode #view-materials .search-box{min-height:54px;border-radius:16px;background:#fff}
++body.v29-ui.v24-tools-mode #view-tools .item-card,
++body.v29-ui.v24-materials-mode #view-materials .item-card{content-visibility:auto;contain-intrinsic-size:80px;box-shadow:0 2px 9px rgba(23,23,23,.035)}
++body.v29-ui.v24-tools-mode #view-tools .item-card{min-height:76px}
++body.v29-ui .v24-frequent-tool{min-height:96px}
++body.v29-ui .v24-frequent-scroll{scroll-snap-type:x proximity}
++body.v29-ui .v24-frequent-tool{scroll-snap-align:start}
++body.v29-ui #toolList,
++body.v29-ui #materialList{-webkit-overflow-scrolling:touch}
++
++/* Horizontal job tabs never get crushed into unreadable 4-column labels. */
++body.v29-ui .job-context-tabs{display:flex;overflow-x:auto;gap:5px;padding:4px;scrollbar-width:none}
++body.v29-ui .job-context-tabs::-webkit-scrollbar{display:none}
++body.v29-ui .job-context-tabs button{flex:0 0 auto;min-width:88px;padding:0 11px;font-size:.78rem}
++
++/* Five primary destinations. 'Altro' opens the menu as a bottom sheet. */
++body.v29-ui .bottom-nav.four-nav{grid-template-columns:repeat(5,minmax(0,1fr));padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
++body.v29-ui .bottom-nav .nav-item{min-height:60px;border-radius:13px}
++body.v29-ui .bottom-nav .nav-item span{font-size:1.18rem}
++body.v29-ui .bottom-nav .nav-item strong{font-size:.67rem}
++body.v29-ui .bottom-nav .nav-item small{top:1px;right:6%;min-width:18px;height:18px;font-size:.56rem}
++body.v29-ui .nav-item.v29-more-nav.active{background:var(--accent-soft);color:var(--accent-dark)}
++
++body.v29-ui #appMenuDialog.v29-sheet[open]{
++  position:fixed;inset:auto 0 0 0;width:min(780px,100%);max-width:none;max-height:min(78dvh,680px);
++  margin:auto auto 0;padding:16px 14px calc(18px + env(safe-area-inset-bottom));
++  border:0;border-radius:var(--v29-sheet-radius) var(--v29-sheet-radius) 0 0;
++  box-shadow:0 -18px 48px rgba(0,0,0,.22)
++}
++body.v29-ui #appMenuDialog.v29-sheet::backdrop{background:rgba(0,0,0,.42);backdrop-filter:blur(2px)}
++body.v29-ui #appMenuDialog.v29-sheet .dialog-header{position:sticky;top:0;z-index:2;margin:-16px -14px 10px;padding:16px 14px 10px;background:var(--panel);border-radius:var(--v29-sheet-radius) var(--v29-sheet-radius) 0 0}
++body.v29-ui #appMenuDialog.v29-sheet .menu-action-list{gap:7px}
++body.v29-ui #appMenuDialog.v29-sheet .menu-action-list button{min-height:61px;border-radius:14px}
++
++/* Large controls remain large; secondary copy gets out of the way on small phones. */
++@media(max-width:520px){
++  body.v29-ui main{padding-left:11px;padding-right:11px}
++  body.v29-ui .brand-copy span{display:none}
++  body.v29-ui .sync-status-compact{max-width:112px}
++  body.v29-ui .today-status-card{padding:11px}
++  body.v29-ui .today-status-icon{width:44px;height:44px}
++  body.v29-ui .page-heading .save-status{display:none}
++  body.v29-ui .bottom-nav .nav-item strong{font-size:.62rem}
++  body.v29-ui .bottom-nav .nav-item small{display:none}
++}
++
++@media(min-width:620px){
++  body.v29-ui .today-actions{display:grid;grid-template-columns:repeat(3,1fr);overflow:visible}
++  body.v29-ui .today-action{min-width:0}
++  body.v29-ui.v24-tools-mode #view-tools .item-list,
++  body.v29-ui.v24-materials-mode #view-materials .material-list{gap:10px}
++}
++
++@media(prefers-reduced-motion:reduce){
++  body.v29-ui *,body.v29-ui *::before,body.v29-ui *::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}
++}
+diff --git a/public/layout-v291.js b/public/layout-v291.js
+new file mode 100644
+--- /dev/null
++++ b/public/layout-v291.js
+@@ -0,0 +1,143 @@
++(() => {
++  'use strict';
++
++  const UI_VERSION = '2.9.1';
++  const APP_VERSION = '2.8.3';
++  const CALENDAR_KEY = 'edil-attrezzi-ui-v29-calendar-open';
++  let calendarOpen = false;
++
++  const setText = (node, value) => {
++    if (node && node.textContent !== value) node.textContent = value;
++  };
++
++  const readBool = (key, fallback = false) => {
++    try {
++      const value = localStorage.getItem(key);
++      return value === null ? fallback : value === '1';
++    } catch { return fallback; }
++  };
++
++  const writeBool = (key, value) => {
++    try { localStorage.setItem(key, value ? '1' : '0'); } catch {}
++  };
++
++  function versionLabels() {
++    const title = `Edil Attrezzi ${APP_VERSION}`;
++    if (document.title !== title) document.title = title;
++    document.documentElement.dataset.layoutUi = '2.9';
++    document.body.classList.add('v29-ui');
++    setText(document.querySelector('.menu-version'), `Edil Attrezzi ${APP_VERSION} · UI 2.9 · funziona anche offline`);
++    setText(document.querySelector('#view-more .more-info-card strong'), `Edil Attrezzi ${APP_VERSION}`);
++    setText(document.querySelector('#view-more .page-heading .count-badge'), 'UI 2.9');
++    document.querySelectorAll('.v24-ui-badge').forEach(node => setText(node, 'UI 2.9'));
++  }
++
++  function addMoreNav() {
++    const nav = document.querySelector('.bottom-nav');
++    if (!nav || nav.querySelector('.v29-more-nav')) return;
++    const dialog = document.getElementById('appMenuDialog');
++    dialog?.classList.add('v29-sheet');
++
++    const button = document.createElement('button');
++    button.className = 'nav-item v29-more-nav';
++    button.type = 'button';
++    button.setAttribute('aria-label', 'Apri altro, backup e impostazioni');
++    button.innerHTML = '<span aria-hidden="true">☰</span><strong>Altro</strong>';
++    nav.appendChild(button);
++
++    button.addEventListener('click', event => {
++      event.preventDefault();
++      event.stopPropagation();
++      if (dialog?.open) return dialog.close();
++      document.getElementById('appMenuBtn')?.click();
++      if (dialog?.open) button.classList.add('active');
++    });
++    dialog?.addEventListener('close', () => button.classList.remove('active'));
++    dialog?.addEventListener('cancel', () => button.classList.remove('active'));
++  }
++
++  function calendarLabel() {
++    return document.getElementById('homeCalendarTitle')?.textContent?.trim() || 'Calendario del mese';
++  }
++
++  function drawCalendarDisclosure() {
++    const card = document.getElementById('homeCalendarCard');
++    const launch = document.getElementById('v29CalendarLaunch');
++    if (!card || !launch) return;
++    card.classList.toggle('v29-collapsed', !calendarOpen);
++    launch.setAttribute('aria-expanded', String(calendarOpen));
++    setText(
++      launch.querySelector('.v29-calendar-copy small'),
++      calendarOpen ? 'Tocca per chiudere il calendario' : `${calendarLabel()} · tocca per aprire`
++    );
++  }
++
++  function addCalendarDisclosure() {
++    const card = document.getElementById('homeCalendarCard');
++    if (!card || document.getElementById('v29CalendarLaunch')) return;
++    calendarOpen = readBool(CALENDAR_KEY, false);
++
++    const launch = document.createElement('button');
++    launch.id = 'v29CalendarLaunch';
++    launch.className = 'v29-calendar-launch';
++    launch.type = 'button';
++    launch.setAttribute('aria-controls', 'homeCalendarCard');
++    launch.innerHTML = '<span aria-hidden="true">🗓️</span><span class="v29-calendar-copy"><strong>Calendario</strong><small></small></span><span class="v29-chevron" aria-hidden="true">⌄</span>';
++    card.insertAdjacentElement('beforebegin', launch);
++
++    launch.addEventListener('click', () => {
++      calendarOpen = !calendarOpen;
++      writeBool(CALENDAR_KEY, calendarOpen);
++      drawCalendarDisclosure();
++      if (calendarOpen) requestAnimationFrame(() => card.scrollIntoView({ block:'nearest', behavior:'smooth' }));
++    });
++
++    const title = document.getElementById('homeCalendarTitle');
++    if (title && window.MutationObserver) new MutationObserver(drawCalendarDisclosure).observe(title, { childList:true, subtree:true });
++    drawCalendarDisclosure();
++  }
++
++  function simplifyAgenda() {
++    const metrics = document.querySelector('.day-metrics');
++    if (!metrics) return;
++    metrics.setAttribute('aria-label', 'Vista della giornata');
++    metrics.setAttribute('role', 'tablist');
++    metrics.querySelectorAll('[data-day-tab]').forEach(button => {
++      button.setAttribute('role', 'tab');
++      const label = button.querySelector('small')?.textContent?.trim();
++      if (label) button.setAttribute('aria-label', `Apri ${label.toLowerCase()} del giorno`);
++    });
++  }
++
++  function improveInputs() {
++    ['toolSearch','materialSearch','settingsCatalogSearch'].forEach(id => {
++      const input = document.getElementById(id);
++      if (!input) return;
++      input.setAttribute('enterkeyhint', 'search');
++      input.setAttribute('autocapitalize', 'none');
++    });
++    const notes = document.getElementById('jobNotes');
++    notes?.setAttribute('spellcheck', 'true');
++    notes?.setAttribute('enterkeyhint', 'enter');
++  }
++
++  function keepJobTabVisible(event) {
++    const button = event.target.closest('.job-context-tabs button');
++    if (!button) return;
++    requestAnimationFrame(() => button.scrollIntoView({ block:'nearest', inline:'center', behavior:'smooth' }));
++  }
++
++  function init() {
++    versionLabels();
++    addMoreNav();
++    addCalendarDisclosure();
++    simplifyAgenda();
++    improveInputs();
++    document.addEventListener('click', keepJobTabVisible, { passive:true });
++    setTimeout(versionLabels, 250);
++    setTimeout(versionLabels, 1000);
++  }
++
++  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once:true });
++  else init();
++})();
+diff --git a/public/runtime.js b/public/runtime.js
+--- a/public/runtime.js
++++ b/public/runtime.js
+@@ -28,7 +28,8 @@
+   window.EdilRuntime = { readSettings, isNative, cloudBaseUrl, apiUrl, normalizeBase };
+ 
+   // V2.8: calendario + cantieri aperti + liste globali + suggerimenti di contesto GPS.
+-  ['daily-v27.css','gps-context-v28.css'].forEach(href => {
++  // V2.9: ultimo layer esclusivamente UI, mobile-first. Nessuna modifica a dati/storage.
++  ['daily-v27.css','gps-context-v28.css','layout-v29.css'].forEach(href => {
+     const style = document.createElement('link');
+     style.rel = 'stylesheet';
+     style.href = href;
+@@ -38,13 +39,13 @@
+   // Il Jobsite Handoff GE360 parte prima della UI. Il reporter viene caricato dopo
+   // l'import così può rimandare alla madre lo stato aggiornato dello stesso jobsiteId.
+   // ge360-galleria aggiunge il passaggio locale firmato dal cantiere attivo alla Galleria.
+-  // usability-v241 è volutamente l'ultimo layer: semplifica la UI senza toccare storage,
+-  // sincronizzazione o logica operativa già esistente.
+-  const modules = ['ge360-jobsite-import.js', 'mother-simplify.js', 'daily-v27.js', 'gps-context-v28.js', 'ge360-jobsite-report.js', 'ge360-galleria.js', 'usability-v241.js'];
++  // usability-v241 semplifica le interazioni operative; layout-v29 rifinisce gerarchia,
++  // navigazione e densità visiva senza toccare storage, sync o logica di cantiere.
++  const modules = ['ge360-jobsite-import.js', 'mother-simplify.js', 'daily-v27.js', 'gps-context-v28.js', 'ge360-jobsite-report.js', 'ge360-galleria.js', 'usability-v241.js', 'layout-v291.js'];
+   modules.forEach(src => {
+     const script = document.createElement('script');
+     script.src = src;
+     script.async = false;
+     document.head.appendChild(script);
+   });
+-})();
+\ No newline at end of file
++})();
+diff --git a/public/sw.js b/public/sw.js
+--- a/public/sw.js
++++ b/public/sw.js
+@@ -1,7 +1,9 @@
+-const CACHE = 'edil-attrezzi-v2.4.1-usability1';
++const CACHE = 'edil-attrezzi-v2.9-layout1';
+ const APP_SHELL = [
+   './', './index.html', './styles.css', './runtime.js', './app.js', './collab.js',
+-  './usability-v241.js', './usability-v24.css',
++  './usability-v241.js', './usability-v24.css', './layout-v291.js', './layout-v29.css',
++  './daily-v27.js', './daily-v27.css', './gps-context-v28.js', './gps-context-v28.css',
++  './ge360-jobsite-import.js', './mother-simplify.js', './ge360-jobsite-report.js', './ge360-galleria.js',
+   './collaboratore.html', './collaboratore.css', './collaboratore.js',
+   './manifest.webmanifest', './offline.html',
+   './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png'
+diff --git a/public/usability-v24.css b/public/usability-v24.css
+--- a/public/usability-v24.css
++++ b/public/usability-v24.css
+@@ -1,4 +1,4 @@
+-/* GE360 Attrezzi — Usability UI 2.4
++/* GE360 Attrezzi — Usability UI 2.5
+    Solo presentazione/interazione: dati, storage, cloud e logica 2.3 restano invariati. */
+ 
+ :root {
+@@ -10,7 +10,7 @@
+   --v24-muted: #666660;
+ }
+ 
+-html[data-usability-ui="2.4"] body {
++html[data-usability-ui="2.5.0"] body {
+   font-size: 17px;
+ }
+ 
+@@ -604,3 +604,949 @@ body.v24-materials-mode #view-materials .item-copy small {
+     transform: none;
+   }
+ }
++
++
++/* UI 2.5 — ricerca rapida attrezzi con suggerimenti e memoria */
++.v241-tool-suggestions {
++  display: grid;
++  gap: 6px;
++  margin: -4px 0 12px;
++  padding: 8px;
++  border: 1px solid #d9d9d3;
++  border-radius: 17px;
++  background: #fff;
++  box-shadow: 0 12px 28px rgba(23,23,23,.12);
++}
++
++.v241-tool-suggestions[hidden] {
++  display: none !important;
++}
++
++.v241-suggest-head {
++  display: flex;
++  align-items: baseline;
++  justify-content: space-between;
++  gap: 8px;
++  padding: 4px 6px 3px;
++}
++
++.v241-suggest-head strong {
++  font-size: .88rem;
++}
++
++.v241-suggest-head small {
++  color: var(--v24-muted);
++  font-size: .72rem;
++}
++
++.v241-tool-suggestion,
++.v241-tool-create {
++  width: 100%;
++  min-height: 62px;
++  display: grid;
++  grid-template-columns: 44px minmax(0,1fr) 34px;
++  align-items: center;
++  gap: 10px;
++  padding: 7px 9px;
++  border: 0;
++  border-radius: 14px;
++  background: #f7f7f3;
++  color: var(--v24-ink);
++  text-align: left;
++}
++
++.v241-tool-suggestion:active,
++.v241-tool-create:active {
++  transform: scale(.99);
++  background: #fff5e8;
++}
++
++.v241-tool-suggestion > span:nth-child(2) strong,
++.v241-tool-suggestion > span:nth-child(2) small,
++.v241-tool-create > span:nth-child(2) strong,
++.v241-tool-create > span:nth-child(2) small {
++  display: block;
++}
++
++.v241-tool-suggestion strong,
++.v241-tool-create strong {
++  font-size: .98rem;
++  line-height: 1.15;
++}
++
++.v241-tool-suggestion small,
++.v241-tool-create small {
++  margin-top: 3px;
++  color: var(--v24-muted);
++  font-size: .77rem;
++  line-height: 1.2;
++}
++
++.v241-suggest-icon,
++.v241-tool-create > span:first-child {
++  display: grid;
++  place-items: center;
++  width: 42px;
++  height: 42px;
++  border-radius: 12px;
++  background: #fff;
++  font-size: 1.35rem;
++}
++
++.v241-tool-suggestion > b {
++  display: grid;
++  place-items: center;
++  width: 32px;
++  height: 32px;
++  border-radius: 10px;
++  background: #fff0df;
++  color: #a95400;
++  font-size: 1.2rem;
++}
++
++.v241-tool-create {
++  grid-template-columns: 44px minmax(0,1fr);
++  margin-top: 2px;
++  border: 1px dashed #e2a25e;
++  background: #fff8ef;
++}
++
++.v241-tool-create > span:first-child {
++  background: #fff0df;
++  color: #a95400;
++  font-weight: 900;
++}
++
++.v241-tool-create strong {
++  color: #7f4000;
++}
++
++body.v24-tools-mode #view-tools .search-box:focus-within {
++  border-color: var(--v24-orange);
++  box-shadow: 0 0 0 4px rgba(239,125,0,.12);
++}
++
++@media (max-width: 520px) {
++  .v241-tool-suggestion,
++  .v241-tool-create {
++    min-height: 66px;
++  }
++}
++
++
++/* Checklist carico: prima le cose mancanti, poi quelle completate */
++body.v24-tools-mode .load-check-section,
++.load-check-section {
++  margin-bottom: 18px;
++}
++
++.load-group-head {
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  gap: 10px;
++  margin-bottom: 8px;
++}
++
++.load-group-head .load-group-title {
++  margin: 0;
++}
++
++.load-group-head > span {
++  flex: 0 0 auto;
++  padding: 5px 9px;
++  border-radius: 999px;
++  background: #fff0df;
++  color: #8e4800;
++  font-size: .76rem;
++  font-weight: 900;
++}
++
++.load-group-complete {
++  padding: 12px 14px;
++  border-radius: 14px;
++  background: var(--v24-green-soft);
++  color: var(--v24-green);
++  font-weight: 900;
++}
++
++.load-done-group {
++  margin-top: 10px;
++  border-top: 1px solid #e6e6e0;
++}
++
++.load-done-group > summary {
++  min-height: 48px;
++  display: flex;
++  align-items: center;
++  cursor: pointer;
++  color: var(--v24-green);
++  font-weight: 900;
++  list-style: none;
++}
++
++.load-done-group > summary::-webkit-details-marker {
++  display: none;
++}
++
++.load-done-group > summary::after {
++  content: "⌄";
++  margin-left: auto;
++  color: var(--v24-muted);
++}
++
++.load-done-group[open] > summary::after {
++  content: "⌃";
++}
++
++.load-done-list {
++  display: grid;
++  gap: 7px;
++  padding-bottom: 4px;
++  opacity: .86;
++}
++
++
++/* UI 2.5 — materiali: stessa ricerca rapida degli attrezzi */
++body.v24-materials-mode #view-materials .sticky-filter {
++  position: relative;
++  top: auto;
++  z-index: 1;
++}
++
++body.v24-materials-mode #view-materials .search-box {
++  min-height: 58px;
++  border: 2px solid #d9d9d3;
++  border-radius: 17px;
++  box-shadow: 0 2px 10px rgba(23,23,23,.04);
++}
++
++body.v24-materials-mode #view-materials .search-box input {
++  font-size: 1.05rem;
++}
++
++body.v24-materials-mode #view-materials .search-box:focus-within {
++  border-color: var(--v24-orange);
++  box-shadow: 0 0 0 4px rgba(239,125,0,.12);
++}
++
++.v241-frequent-materials {
++  margin-top: 4px;
++}
++
++.v241-frequent-material {
++  flex-basis: 122px;
++}
++
++.v241-material-suggestions {
++  margin-top: -4px;
++}
++
++.v241-material-suggestion .v241-suggest-icon {
++  background: #f5f2ea;
++}
++
++.v241-material-create {
++  border-color: #d9a34c;
++}
++
++body.v24-materials-mode #view-materials .material-card {
++  touch-action: manipulation;
++}
++
++
++/* UI 2.6 — dashboard operativa e pagina unica "Cosa prendere" */
++.today-pickup-card,
++.today-notes-card {
++  border-radius: 20px;
++  overflow: hidden;
++}
++
++.today-pickup-card {
++  border: 2px solid rgba(239,125,0,.2);
++  box-shadow: 0 8px 24px rgba(23,23,23,.06);
++}
++
++.today-pickup-card .section-heading,
++.today-notes-card .section-heading {
++  align-items: flex-start;
++}
++
++.section-helper {
++  margin: 5px 0 0;
++  font-size: .82rem;
++  line-height: 1.35;
++  color: var(--muted, #696969);
++}
++
++.dashboard-pickup-group + .dashboard-pickup-group {
++  margin-top: 14px;
++  padding-top: 14px;
++  border-top: 1px solid rgba(23,23,23,.08);
++}
++
++.dashboard-pickup-group > h3 {
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  margin: 0 0 8px;
++  font-size: .92rem;
++}
++
++.dashboard-pickup-group > h3 span {
++  display: inline-flex;
++  min-width: 26px;
++  height: 26px;
++  align-items: center;
++  justify-content: center;
++  padding: 0 7px;
++  border-radius: 999px;
++  background: rgba(23,23,23,.07);
++  font-size: .75rem;
++}
++
++.pickup-row {
++  min-height: 64px;
++  display: grid;
++  grid-template-columns: 28px 38px minmax(0,1fr) auto;
++  align-items: center;
++  gap: 9px;
++  padding: 9px 4px;
++}
++
++.pickup-row input[type="checkbox"] {
++  width: 24px;
++  height: 24px;
++  margin: 0;
++}
++
++.pickup-row .checklist-text {
++  min-width: 0;
++  display: flex;
++  flex-direction: column;
++  gap: 3px;
++}
++
++.pickup-row .checklist-text strong {
++  font-size: .96rem;
++  line-height: 1.2;
++}
++
++.pickup-row .checklist-text small {
++  overflow: hidden;
++  text-overflow: ellipsis;
++  white-space: nowrap;
++  color: var(--muted, #6e6e6e);
++  font-size: .74rem;
++}
++
++.pickup-qty,
++.pickup-status {
++  max-width: 108px;
++  text-align: right;
++  font-size: .76rem;
++  line-height: 1.2;
++  font-weight: 800;
++}
++
++.pickup-row.needs-buy .pickup-status {
++  color: #9a5410;
++}
++
++.today-open-pickup {
++  width: 100%;
++  margin-top: 12px;
++  min-height: 48px;
++}
++
++.today-notes-card {
++  margin-top: 12px;
++  background: rgba(255,255,255,.74);
++}
++
++.today-notes-card .note-job-group h3 {
++  margin-bottom: 5px;
++  font-size: .82rem;
++  color: var(--muted, #666);
++}
++
++.today-notes-card .note-row {
++  min-height: 52px;
++}
++
++.today-actions-simple {
++  grid-template-columns: minmax(0,1.5fr) minmax(0,1fr);
++}
++
++#view-warehouse .page-heading {
++  margin-bottom: 12px;
++}
++
++.pickup-mode-switch {
++  display: grid;
++  grid-template-columns: repeat(3,minmax(0,1fr));
++  gap: 6px;
++  padding: 5px;
++  border-radius: 16px;
++  background: rgba(23,23,23,.06);
++  position: sticky;
++  top: 6px;
++  z-index: 8;
++}
++
++.pickup-mode-switch button {
++  min-height: 46px;
++  border-radius: 12px;
++  padding: 7px 5px;
++  font-weight: 800;
++}
++
++.pickup-search {
++  display: grid;
++  grid-template-columns: 30px minmax(0,1fr) 38px;
++  align-items: center;
++  gap: 4px;
++  min-height: 56px;
++  margin: 10px 0 14px;
++  padding: 0 8px 0 12px;
++  border: 2px solid #dddcd6;
++  border-radius: 17px;
++  background: #fff;
++  box-shadow: 0 3px 12px rgba(23,23,23,.05);
++}
++
++.pickup-search:focus-within {
++  border-color: var(--v24-orange);
++  box-shadow: 0 0 0 4px rgba(239,125,0,.12);
++}
++
++.pickup-search > span {
++  font-size: 1.35rem;
++  font-weight: 800;
++}
++
++.pickup-search input {
++  width: 100%;
++  min-width: 0;
++  border: 0;
++  outline: 0;
++  background: transparent;
++  font: inherit;
++  font-size: 1rem;
++}
++
++.pickup-search button {
++  width: 36px;
++  height: 36px;
++  border: 0;
++  border-radius: 50%;
++  background: rgba(23,23,23,.07);
++  font-size: 1.25rem;
++}
++
++#view-warehouse .focus-pane {
++  margin-bottom: 16px;
++}
++
++#view-warehouse .focus-pane-heading {
++  position: sticky;
++  top: 66px;
++  z-index: 5;
++  padding: 8px 0;
++  background: var(--surface, #f6f5f1);
++}
++
++#view-warehouse .daily-check-row,
++#view-warehouse .daily-material-row {
++  border-radius: 16px;
++}
++
++.bottom-nav.three-nav {
++  grid-template-columns: repeat(3,minmax(0,1fr));
++}
++
++.bottom-nav.three-nav .nav-item strong {
++  font-size: .76rem;
++}
++
++@media (max-width: 420px) {
++  .pickup-row {
++    grid-template-columns: 26px 34px minmax(0,1fr);
++  }
++  .pickup-qty,
++  .pickup-status {
++    grid-column: 3;
++    max-width: none;
++    text-align: left;
++    margin-top: -3px;
++  }
++  .pickup-mode-switch button {
++    font-size: .78rem;
++  }
++}
++
++
++/* UI 2.7 — semplificazione visiva: una cosa importante per volta */
++#view-today {
++  padding-top: 10px;
++}
++
++#view-today .today-heading {
++  margin-bottom: 8px;
++  padding-bottom: 0;
++}
++
++#view-today .today-heading h1,
++#view-warehouse .page-heading h1 {
++  font-size: clamp(1.7rem, 7vw, 2.15rem);
++  line-height: 1;
++  letter-spacing: -.035em;
++}
++
++#view-today .today-heading .save-status {
++  display: none;
++}
++
++#view-today .today-heading p {
++  margin-top: 5px;
++  font-size: .84rem;
++  color: var(--muted, #6b6b6b);
++}
++
++#view-today .today-status-card {
++  min-height: 58px;
++  margin: 8px 0 12px;
++  padding: 9px 12px;
++  border: 0;
++  border-radius: 15px;
++  box-shadow: none;
++}
++
++#view-today .today-status-copy {
++  min-width: 0;
++  gap: 9px;
++}
++
++#view-today .today-status-icon {
++  width: 34px;
++  height: 34px;
++  font-size: 1rem;
++}
++
++#view-today .today-status-copy strong {
++  font-size: .91rem;
++}
++
++#view-today .today-status-copy p {
++  margin-top: 1px;
++  font-size: .73rem;
++  line-height: 1.25;
++  max-width: 48ch;
++}
++
++#view-today .today-progress-pill {
++  flex: 0 0 auto;
++  min-width: 52px;
++  padding: 6px 8px;
++  font-size: .74rem;
++}
++
++#view-today .today-pickup-card {
++  margin: 0 0 10px;
++  padding: 14px;
++  border: 0;
++  border-radius: 18px;
++  box-shadow: 0 5px 18px rgba(23,23,23,.06);
++}
++
++#view-today .today-pickup-card .section-heading,
++#view-today .today-notes-card .section-heading,
++#view-today .today-section > .section-heading {
++  margin-bottom: 8px;
++}
++
++#view-today .today-pickup-card h2,
++#view-today .today-notes-card h2,
++#view-today .today-section h2 {
++  font-size: 1.03rem;
++  letter-spacing: -.015em;
++}
++
++#view-today .dashboard-pickup-group {
++  margin: 0;
++}
++
++#view-today .dashboard-pickup-group + .dashboard-pickup-group {
++  margin-top: 8px;
++  padding-top: 8px;
++}
++
++#view-today .dashboard-pickup-group > h3 {
++  margin: 0 0 3px;
++  font-size: .76rem;
++  text-transform: uppercase;
++  letter-spacing: .035em;
++  color: var(--muted, #666);
++}
++
++#view-today .dashboard-pickup-group > h3 span {
++  min-width: 22px;
++  height: 22px;
++  font-size: .7rem;
++}
++
++#view-today .pickup-row {
++  min-height: 54px;
++  padding: 5px 1px;
++  border-bottom: 1px solid rgba(23,23,23,.065);
++}
++
++#view-today .pickup-row:last-child {
++  border-bottom: 0;
++}
++
++#view-today .pickup-row .checklist-icon {
++  font-size: 1.05rem;
++}
++
++#view-today .pickup-row .checklist-text strong {
++  font-size: .9rem;
++}
++
++#view-today .pickup-row .checklist-text small {
++  font-size: .69rem;
++}
++
++#view-today .pickup-qty,
++#view-today .pickup-status {
++  font-size: .7rem;
++}
++
++#view-today .today-open-pickup {
++  min-height: 42px;
++  margin-top: 8px;
++  border-radius: 12px;
++  font-size: .82rem;
++}
++
++#view-today .today-notes-card {
++  margin: 0 0 10px;
++  padding: 12px 14px;
++  border: 0;
++  border-radius: 16px;
++  box-shadow: none;
++  background: rgba(23,23,23,.035);
++}
++
++#view-today .today-notes-card .note-row {
++  min-height: 44px;
++  padding-block: 4px;
++}
++
++#view-today .today-actions-simple {
++  display: flex;
++  justify-content: flex-end;
++  margin: 2px 0 8px;
++}
++
++#view-today .today-new-job-simple {
++  width: auto;
++  min-height: 40px;
++  padding: 0 13px;
++  display: inline-flex;
++  align-items: center;
++  gap: 7px;
++  border-radius: 12px;
++  box-shadow: none;
++}
++
++#view-today .today-new-job-simple span {
++  font-size: 1rem;
++}
++
++#view-today .today-new-job-simple strong {
++  font-size: .82rem;
++}
++
++#view-today .today-section {
++  margin-top: 8px;
++  padding: 0;
++  border: 0;
++  background: transparent;
++  box-shadow: none;
++}
++
++#view-today .today-job-card {
++  border-radius: 15px;
++  margin-bottom: 7px;
++  box-shadow: none;
++}
++
++#view-today .today-job-main {
++  padding: 11px 12px;
++}
++
++#view-today .today-job-main > strong {
++  font-size: .93rem;
++}
++
++#view-today .today-job-main > small {
++  font-size: .71rem;
++}
++
++#view-today .today-job-meta {
++  margin-top: 5px;
++  font-size: .69rem;
++}
++
++#view-today .today-job-status {
++  min-height: 36px;
++  font-size: .71rem;
++}
++
++#view-today .today-more-panel {
++  margin: 12px 0 4px;
++  border-top: 1px solid rgba(23,23,23,.09);
++}
++
++#view-today .today-more-panel > summary {
++  min-height: 50px;
++  display: grid;
++  grid-template-columns: 26px 1fr 22px;
++  align-items: center;
++  gap: 7px;
++  list-style: none;
++  cursor: pointer;
++  font-size: .84rem;
++}
++
++#view-today .today-more-panel > summary::-webkit-details-marker {
++  display: none;
++}
++
++#view-today .today-more-panel > summary span:last-child {
++  transition: transform .18s ease;
++  text-align: center;
++}
++
++#view-today .today-more-panel[open] > summary span:last-child {
++  transform: rotate(90deg);
++}
++
++#view-today .today-more-content {
++  padding-bottom: 8px;
++}
++
++#view-today .today-more-content .home-calendar-card {
++  margin-top: 0;
++  box-shadow: none;
++}
++
++#view-today .today-more-content .next-section {
++  margin-top: 10px;
++}
++
++#view-today .today-safety-row {
++  display: none;
++}
++
++/* Pagina Cosa prendere: piatta, veloce, orientata alla ricerca */
++#view-warehouse {
++  padding-top: 10px;
++}
++
++#view-warehouse .page-heading {
++  margin-bottom: 8px;
++}
++
++#view-warehouse .page-heading .count-badge {
++  font-size: .76rem;
++}
++
++#view-warehouse .focus-date-control {
++  margin: 0 0 8px;
++  min-height: 44px;
++  border-radius: 13px;
++  padding: 3px 5px;
++}
++
++#view-warehouse .focus-date-control .agenda-arrow,
++#view-warehouse .focus-date-control .agenda-today {
++  min-height: 36px;
++}
++
++#view-warehouse .warehouse-day-summary {
++  min-height: 0;
++  padding: 7px 10px;
++  margin: 0 0 8px;
++  border: 0;
++  border-radius: 12px;
++  background: rgba(23,23,23,.035);
++  box-shadow: none;
++}
++
++#view-warehouse .warehouse-day-summary > div:first-child small {
++  display: none;
++}
++
++#view-warehouse .warehouse-day-summary strong {
++  font-size: .8rem;
++}
++
++#view-warehouse .warehouse-summary-chips span {
++  padding: 4px 7px;
++  font-size: .7rem;
++}
++
++#view-warehouse .pickup-search {
++  min-height: 50px;
++  margin: 0 0 7px;
++  border-width: 1.5px;
++  border-radius: 14px;
++  box-shadow: none;
++}
++
++#view-warehouse .pickup-mode-switch {
++  position: static;
++  margin: 0 0 10px;
++  padding: 3px;
++  gap: 3px;
++  border-radius: 13px;
++}
++
++#view-warehouse .pickup-mode-switch button {
++  min-height: 39px;
++  padding: 5px 3px;
++  border-radius: 10px;
++  font-size: .78rem;
++}
++
++#view-warehouse .focus-pane {
++  margin: 0;
++  padding: 0;
++  border: 0;
++  box-shadow: none;
++  background: transparent;
++}
++
++#view-warehouse .focus-pane + .focus-pane:not([hidden]) {
++  margin-top: 12px;
++  padding-top: 10px;
++  border-top: 1px solid rgba(23,23,23,.1);
++}
++
++#view-warehouse .focus-pane-heading {
++  position: static;
++  min-height: 42px;
++  padding: 4px 0 6px;
++  background: transparent;
++}
++
++#view-warehouse .focus-pane-heading strong {
++  font-size: .9rem;
++}
++
++#view-warehouse .focus-pane-heading .compact-action {
++  min-height: 34px;
++  padding: 0 9px;
++  font-size: .7rem;
++}
++
++#view-warehouse .daily-check-row,
++#view-warehouse .daily-material-row {
++  margin-bottom: 5px;
++  border: 0;
++  border-bottom: 1px solid rgba(23,23,23,.075);
++  border-radius: 0;
++  box-shadow: none;
++  background: transparent;
++}
++
++#view-warehouse .daily-main-check {
++  min-height: 54px;
++  padding: 6px 2px;
++}
++
++#view-warehouse .daily-check-copy strong,
++#view-warehouse .daily-material-head strong {
++  font-size: .9rem;
++}
++
++#view-warehouse .daily-check-copy small,
++#view-warehouse .daily-material-head small {
++  font-size: .68rem;
++}
++
++#view-warehouse .daily-qty {
++  font-size: .72rem;
++}
++
++#view-warehouse .daily-material-row {
++  padding: 7px 2px 9px;
++}
++
++#view-warehouse .daily-material-group > h3 {
++  margin: 8px 0 4px;
++  font-size: .76rem;
++  text-transform: uppercase;
++  letter-spacing: .035em;
++}
++
++#view-warehouse .daily-material-actions {
++  gap: 5px;
++}
++
++#view-warehouse .daily-action-check {
++  min-height: 36px;
++  padding: 5px 8px;
++  font-size: .7rem;
++  border-radius: 10px;
++}
++
++/* Barra superiore e navigazione meno ingombranti */
++.topbar .brand-copy > span {
++  display: none;
++}
++
++.topbar {
++  min-height: 54px;
++}
++
++.bottom-nav.three-nav .nav-item {
++  min-height: 56px;
++}
++
++.bottom-nav.three-nav .nav-item > span {
++  font-size: 1.15rem;
++}
++
++.bottom-nav.three-nav .nav-item strong {
++  font-size: .7rem;
++}
++
++@media (max-width: 420px) {
++  #view-today .today-status-copy p {
++    display: none;
++  }
++
++  #view-today .today-status-card {
++    min-height: 50px;
++  }
++
++  #view-today .today-pickup-card,
++  #view-today .today-notes-card {
++    padding-inline: 12px;
++  }
++
++  #view-today .pickup-row {
++    min-height: 50px;
++  }
++
++  #view-warehouse .warehouse-day-summary {
++    padding-inline: 8px;
++  }
++
++  #view-warehouse .focus-date-control .agenda-today {
++    display: none;
++  }
++}
+diff --git a/public/usability-v241.js b/public/usability-v241.js
+--- a/public/usability-v241.js
++++ b/public/usability-v241.js
+@@ -1,9 +1,11 @@
+ (() => {
+   'use strict';
+ 
+-  const UI_VERSION = '2.4.1';
++  const UI_VERSION = '2.5.0';
+   const USAGE_KEY = 'edil-attrezzi-ui-v24-tool-usage';
++  const MATERIAL_USAGE_KEY = 'edil-attrezzi-ui-v25-material-usage';
+   const DEFAULT_TOOLS = ['trapano-avvitatore','smerigliatrice','laser','aspirapolvere','tassellatore','prolunga','martello','cutter'];
++  const DEFAULT_MATERIALS = ['collante-c2tes1','primer-aggrappante','rasante','fissativo','pittura-lavabile','silicone-sanitario','nastro-carta','sacchi-macerie'];
+   let refreshTimer = 0;
+ 
+   function state() {
+@@ -45,6 +47,273 @@
+     try { localStorage.setItem(USAGE_KEY, JSON.stringify(trimmed)); } catch {}
+   }
+ 
++  function readMaterialUsage() {
++    try {
++      const parsed = JSON.parse(localStorage.getItem(MATERIAL_USAGE_KEY) || '{}');
++      return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
++    } catch { return {}; }
++  }
++
++  function recordMaterial(id) {
++    if (!id) return;
++    const usage = readMaterialUsage();
++    const current = usage[id] || { count:0, lastUsedAt:0 };
++    current.count = Number(current.count || 0) + 1;
++    current.lastUsedAt = Date.now();
++    usage[id] = current;
++    const trimmed = Object.fromEntries(Object.entries(usage)
++      .sort((a,b) => Number(b[1]?.lastUsedAt || 0) - Number(a[1]?.lastUsedAt || 0))
++      .slice(0,120));
++    try { localStorage.setItem(MATERIAL_USAGE_KEY, JSON.stringify(trimmed)); } catch {}
++  }
++
++  function norm(value) {
++    return String(value || '').trim().toLocaleLowerCase('it-IT').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
++  }
++
++  function safe(value) {
++    return String(value ?? '').replace(/[&<>"']/g,char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
++  }
++
++  function toolUsageScore(id) {
++    const stats=readUsage()[id] || {};
++    const age=stats.lastUsedAt ? Math.max(0,(Date.now()-Number(stats.lastUsedAt))/86400000) : 999;
++    const recency=stats.lastUsedAt ? Math.max(0,30-Math.min(30,age)) : 0;
++    const fallbackIndex=DEFAULT_TOOLS.indexOf(id);
++    const fallback=fallbackIndex >= 0 ? 20-fallbackIndex : 0;
++    return Number(stats.count || 0)*40 + recency + fallback;
++  }
++
++  function availableTools() {
++    try {
++      const tools=window.EdilApp?.getTools?.();
++      return Array.isArray(tools) ? tools : [];
++    } catch {
++      return [];
++    }
++  }
++
++  function toolSuggestions(query) {
++    const q=norm(query);
++    if (q.length < 2) return [];
++    return availableTools().map(item => {
++      const name=norm(item.name);
++      const category=norm(item.note || '');
++      let match=0;
++      if (name === q) match=1200;
++      else if (name.startsWith(q)) match=900;
++      else if (name.split(/\s+/).some(word => word.startsWith(q))) match=760;
++      else if (name.includes(q)) match=620;
++      else if (category.includes(q)) match=320;
++      else return null;
++      return { item, score:match+toolUsageScore(item.id) };
++    }).filter(Boolean).sort((a,b) => b.score-a.score || a.item.name.localeCompare(b.item.name,'it')).slice(0,7);
++  }
++
++  function ensureToolAutocomplete() {
++    const search=document.getElementById('toolSearch');
++    const box=search?.closest('.search-box');
++    if (!search || !box) return null;
++    let panel=document.getElementById('v241ToolSuggestions');
++    if (!panel) {
++      panel=document.createElement('div');
++      panel.id='v241ToolSuggestions';
++      panel.className='v241-tool-suggestions';
++      panel.hidden=true;
++      panel.setAttribute('role','listbox');
++      box.insertAdjacentElement('afterend',panel);
++    }
++    if (search.dataset.v241Autocomplete !== '1') {
++      search.dataset.v241Autocomplete='1';
++      search.setAttribute('enterkeyhint','done');
++      search.addEventListener('focus',() => renderToolSuggestions());
++      search.addEventListener('input',() => renderToolSuggestions());
++      search.addEventListener('keydown',event => {
++        if (event.key === 'Escape') {
++          panel.hidden=true;
++          return;
++        }
++        if (event.key !== 'Enter') return;
++        const text=String(search.value || '').trim();
++        if (text.length < 2) return;
++        event.preventDefault();
++        event.stopImmediatePropagation();
++        const item=window.EdilApp?.addToolByName?.(text);
++        if (item?.id) recordTool(item.id);
++        panel.hidden=true;
++        schedule(0);
++      },true);
++      search.addEventListener('blur',() => setTimeout(() => { panel.hidden=true; },180));
++    }
++    return panel;
++  }
++
++  function renderToolSuggestions() {
++    const search=document.getElementById('toolSearch');
++    const panel=ensureToolAutocomplete();
++    if (!search || !panel) return;
++    const text=String(search.value || '').trim();
++    if (text.length < 2) {
++      panel.hidden=true;
++      panel.innerHTML='';
++      return;
++    }
++    const matches=toolSuggestions(text);
++    const exact=availableTools().some(item => norm(item.name) === norm(text));
++    const rows=matches.map(({item}) => {
++      const stats=readUsage()[item.id] || {};
++      const meta=Number(stats.count || 0) > 0 ? `Usato ${Number(stats.count)} volte` : (item.note || 'Attrezzo');
++      return `<button type="button" class="v241-tool-suggestion" role="option" data-v241-tool-id="${safe(item.id)}"><span class="v241-suggest-icon">${safe(item.icon || '🔧')}</span><span><strong>${safe(item.name)}</strong><small>${safe(meta)}</small></span><b>＋</b></button>`;
++    }).join('');
++    const create=!exact ? `<button type="button" class="v241-tool-create" data-v241-tool-create="1"><span>＋</span><span><strong>Aggiungi “${safe(text)}”</strong><small>Nuovo attrezzo · verrà ricordato anche in futuro</small></span></button>` : '';
++    panel.innerHTML=`<div class="v241-suggest-head"><strong>Suggerimenti</strong><small>tocca per aggiungere</small></div>${rows}${create}`;
++    panel.hidden=false;
++  }
++
++
++  function materialUsageScore(id) {
++    const stats=readMaterialUsage()[id] || {};
++    const age=stats.lastUsedAt ? Math.max(0,(Date.now()-Number(stats.lastUsedAt))/86400000) : 999;
++    const recency=stats.lastUsedAt ? Math.max(0,30-Math.min(30,age)) : 0;
++    const fallbackIndex=DEFAULT_MATERIALS.indexOf(id);
++    const fallback=fallbackIndex >= 0 ? 20-fallbackIndex : 0;
++    return Number(stats.count || 0)*40 + recency + fallback;
++  }
++
++  function availableMaterials() {
++    try {
++      const items=window.EdilApp?.getMaterials?.();
++      return Array.isArray(items) ? items : [];
++    } catch {
++      return [];
++    }
++  }
++
++  function materialSuggestions(query) {
++    const q=norm(query);
++    if (q.length < 2) return [];
++    return availableMaterials().map(item => {
++      const name=norm(item.name);
++      const meta=norm(`${item.note || ''} ${item.unit || ''}`);
++      let match=0;
++      if (name === q) match=1200;
++      else if (name.startsWith(q)) match=900;
++      else if (name.split(/\s+/).some(word => word.startsWith(q))) match=760;
++      else if (name.includes(q)) match=620;
++      else if (meta.includes(q)) match=320;
++      else return null;
++      return {item,score:match+materialUsageScore(item.id)};
++    }).filter(Boolean).sort((a,b) => b.score-a.score || a.item.name.localeCompare(b.item.name,'it')).slice(0,7);
++  }
++
++  function ensureMaterialAutocomplete() {
++    const search=document.getElementById('materialSearch');
++    const box=search?.closest('.search-box');
++    if (!search || !box) return null;
++    let panel=document.getElementById('v241MaterialSuggestions');
++    if (!panel) {
++      panel=document.createElement('div');
++      panel.id='v241MaterialSuggestions';
++      panel.className='v241-tool-suggestions v241-material-suggestions';
++      panel.hidden=true;
++      panel.setAttribute('role','listbox');
++      box.insertAdjacentElement('afterend',panel);
++    }
++    if (search.dataset.v241Autocomplete !== '1') {
++      search.dataset.v241Autocomplete='1';
++      search.setAttribute('enterkeyhint','done');
++      search.addEventListener('focus',() => renderMaterialSuggestions());
++      search.addEventListener('input',() => renderMaterialSuggestions());
++      search.addEventListener('keydown',event => {
++        if (event.key === 'Escape') {
++          panel.hidden=true;
++          return;
++        }
++        if (event.key !== 'Enter') return;
++        const text=String(search.value || '').trim();
++        if (text.length < 2) return;
++        event.preventDefault();
++        event.stopImmediatePropagation();
++        const item=window.EdilApp?.addMaterialByName?.(text);
++        if (item?.id) recordMaterial(item.id);
++        panel.hidden=true;
++        schedule(0);
++      },true);
++      search.addEventListener('blur',() => setTimeout(() => { panel.hidden=true; },180));
++    }
++    return panel;
++  }
++
++  function renderMaterialSuggestions() {
++    const search=document.getElementById('materialSearch');
++    const panel=ensureMaterialAutocomplete();
++    if (!search || !panel) return;
++    const text=String(search.value || '').trim();
++    if (text.length < 2) {
++      panel.hidden=true;
++      panel.innerHTML='';
++      return;
++    }
++    const matches=materialSuggestions(text);
++    const exact=availableMaterials().some(item => norm(item.name) === norm(text));
++    const rows=matches.map(({item}) => {
++      const stats=readMaterialUsage()[item.id] || {};
++      const meta=Number(stats.count || 0)>0
++        ? `Usato ${Number(stats.count)} volte · ${item.unit || 'unità'}`
++        : (item.note || item.unit || 'Materiale');
++      return `<button type="button" class="v241-tool-suggestion v241-material-suggestion" role="option" data-v241-material-id="${safe(item.id)}"><span class="v241-suggest-icon">${safe(item.icon || '📦')}</span><span><strong>${safe(item.name)}</strong><small>${safe(meta)}</small></span><b>＋</b></button>`;
++    }).join('');
++    const create=!exact ? `<button type="button" class="v241-tool-create v241-material-create" data-v241-material-create="1"><span>＋</span><span><strong>Aggiungi “${safe(text)}”</strong><small>Nuovo materiale · verrà ricordato anche in futuro</small></span></button>` : '';
++    panel.innerHTML=`<div class="v241-suggest-head"><strong>Suggerimenti materiali</strong><small>tocca per aggiungere</small></div>${rows}${create}`;
++    panel.hidden=false;
++  }
++
++  function frequentMaterialMarkup() {
++    return availableMaterials()
++      .map(item => ({item,score:materialUsageScore(item.id)}))
++      .sort((a,b) => b.score-a.score || a.item.name.localeCompare(b.item.name,'it'))
++      .slice(0,8)
++      .map(({item}) => {
++        const stats=readMaterialUsage()[item.id] || {};
++        const meta=Number(stats.count || 0)>0 ? `${Number(stats.count)}× usato` : '＋ aggiungi';
++        return `<button class="v24-frequent-tool v241-frequent-material" data-v241-frequent-material="${safe(item.id)}" type="button"><span>${safe(item.icon || '📦')}</span><strong>${safe(item.name)}</strong><small>${safe(meta)}</small></button>`;
++      }).join('');
++  }
++
++  function ensureFrequentMaterials() {
++    const list=document.getElementById('materialList');
++    const search=document.getElementById('materialSearch');
++    if (!list) return;
++    let section=document.getElementById('v241FrequentMaterials');
++    if (!section) {
++      section=document.createElement('section');
++      section.id='v241FrequentMaterials';
++      section.className='v24-frequent-tools v241-frequent-materials';
++      section.innerHTML='<div class="v24-frequent-head"><strong>Usati spesso</strong><small>un tocco per aggiungere</small></div><div class="v24-frequent-scroll"></div>';
++      list.insertAdjacentElement('beforebegin',section);
++    }
++    section.hidden=Boolean(search?.value?.trim());
++    if (section.hidden) return;
++    const row=section.querySelector('.v24-frequent-scroll');
++    const html=frequentMaterialMarkup();
++    if (row && row.dataset.renderKey !== html) {
++      row.innerHTML=html;
++      row.dataset.renderKey=html;
++    }
++  }
++
++  function decorateMaterials() {
++    const title=document.getElementById('materialsTitle');
++    if (title) title.textContent='Checklist materiali';
++    const intro=document.querySelector('#view-materials .page-heading p');
++    if (intro) intro.textContent='Cerca, aggiungi e controlla cosa hai già e cosa devi comprare.';
++    const search=document.getElementById('materialSearch');
++    if (search) search.placeholder='Scrivi 2 lettere: col…, ras…, sil…';
++    ensureMaterialAutocomplete();
++    renderMaterialSuggestions();
++    ensureFrequentMaterials();
++  }
++
+   function setModeClasses() {
+     const current = state();
+     const active = String(current.activeView || '');
+@@ -241,11 +510,13 @@
+ 
+   function decorateTools() {
+     const title = document.getElementById('toolsTitle');
+-    if (title) title.textContent = 'Scegli gli attrezzi';
++    if (title) title.textContent = 'Checklist attrezzi';
+     const intro = document.querySelector('#view-tools .page-heading p');
+-    if (intro) intro.textContent = 'Tocca tutta la riga per aggiungere o togliere.';
++    if (intro) intro.textContent = 'Cerca, aggiungi e prepara gli attrezzi con un tocco.';
+     const search = document.getElementById('toolSearch');
+-    if (search) search.placeholder = 'Cerca un attrezzo…';
++    if (search) search.placeholder = 'Scrivi 2 lettere: tas…, las…, fle…';
++    ensureToolAutocomplete();
++    renderToolSuggestions();
+     decorateToolCards();
+     ensureFrequentTools();
+     ensureDoneBar();
+@@ -284,6 +555,67 @@
+   }
+ 
+   function onDocumentClick(event) {
++    const suggestedMaterial=event.target.closest('[data-v241-material-id]');
++    if (suggestedMaterial) {
++      event.preventDefault();
++      event.stopImmediatePropagation();
++      const item=window.EdilApp?.addMaterialById?.(suggestedMaterial.dataset.v241MaterialId);
++      if (item?.id) recordMaterial(item.id);
++      const panel=document.getElementById('v241MaterialSuggestions');
++      if (panel) panel.hidden=true;
++      schedule(0);
++      return;
++    }
++    const createMaterial=event.target.closest('[data-v241-material-create]');
++    if (createMaterial) {
++      event.preventDefault();
++      event.stopImmediatePropagation();
++      const search=document.getElementById('materialSearch');
++      const text=String(search?.value || '').trim();
++      if (text.length >= 2) {
++        const item=window.EdilApp?.addMaterialByName?.(text);
++        if (item?.id) recordMaterial(item.id);
++      }
++      const panel=document.getElementById('v241MaterialSuggestions');
++      if (panel) panel.hidden=true;
++      schedule(0);
++      return;
++    }
++    const frequentMaterial=event.target.closest('[data-v241-frequent-material]');
++    if (frequentMaterial) {
++      event.preventDefault();
++      event.stopImmediatePropagation();
++      const item=window.EdilApp?.addMaterialById?.(frequentMaterial.dataset.v241FrequentMaterial);
++      if (item?.id) recordMaterial(item.id);
++      schedule(0);
++      return;
++    }
++    const suggested = event.target.closest('[data-v241-tool-id]');
++    if (suggested) {
++      event.preventDefault();
++      event.stopImmediatePropagation();
++      const item=window.EdilApp?.addToolById?.(suggested.dataset.v241ToolId);
++      if (item?.id) recordTool(item.id);
++      const panel=document.getElementById('v241ToolSuggestions');
++      if (panel) panel.hidden=true;
++      schedule(0);
++      return;
++    }
++    const createTool = event.target.closest('[data-v241-tool-create]');
++    if (createTool) {
++      event.preventDefault();
++      event.stopImmediatePropagation();
++      const search=document.getElementById('toolSearch');
++      const text=String(search?.value || '').trim();
++      if (text.length >= 2) {
++        const item=window.EdilApp?.addToolByName?.(text);
++        if (item?.id) recordTool(item.id);
++      }
++      const panel=document.getElementById('v241ToolSuggestions');
++      if (panel) panel.hidden=true;
++      schedule(0);
++      return;
++    }
+     const frequent = event.target.closest('[data-v24-tool-id]');
+     if (frequent) {
+       event.preventDefault();
+@@ -360,6 +692,14 @@
+     document.addEventListener('click',onDocumentClick,true);
+     document.getElementById('toolList')?.addEventListener('click',onToolClick,true);
+     document.getElementById('toolList')?.addEventListener('keydown',onToolKey,true);
++    document.getElementById('materialList')?.addEventListener('click',event => {
++      const card=event.target.closest('.material-card[data-item-id]');
++      if (!card) return;
++      if (event.target.closest('[data-add]')) {
++        recordMaterial(card.dataset.itemId);
++        schedule(0);
++      }
++    },true);
+     window.addEventListener('edil:render',() => schedule(0));
+     window.addEventListener('hashchange',() => schedule(30));
+     window.addEventListener('popstate',() => schedule(30));
+@@ -376,6 +716,9 @@
+       forceAllTools();
+       decorateTools();
+     }
++    if (active === 'materials') {
++      decorateMaterials();
++    }
+     document.documentElement.dataset.usabilityUi = UI_VERSION;
+   }
+ 
+diff --git a/public/version.json b/public/version.json
+--- a/public/version.json
++++ b/public/version.json
+@@ -1,7 +1,7 @@
+ {
+   "app": "EDIL_ATTREZZI_PWA",
+   "version": "2.3.0",
+-  "build": "2026-08-19",
++  "build": "2026-09-23",
+   "features": [
+     "editable-settings",
+     "editable-catalog",
+@@ -29,6 +29,28 @@
+     "purchase-checklist",
+     "load-checklist",
+     "offline",
+-    "full-json-backup"
++    "full-json-backup",
++    "smart-tool-autocomplete",
++    "usage-ranked-tools",
++    "persistent-quick-custom-tools",
++    "smart-material-autocomplete",
++    "usage-ranked-materials",
++    "persistent-quick-custom-materials",
++    "expanded-professional-catalog",
++    "cartongesso-system-components",
++    "fixings-and-sealants-catalog",
++    "pickup-dashboard",
++    "separate-dashboard-notes",
++    "unified-pickup-page",
++    "all-tools-materials-search",
++    "simplified-mobile-layout",
++    "collapsed-secondary-agenda",
++    "flat-pickup-list",
++    "compact-topbar",
++    "ge360-integration-bus-v1",
++    "multi-consumer-outbox",
++    "system-to-system-auth",
++    "n8n-ready",
++    "bridge-data-exchange"
+   ]
+ }
